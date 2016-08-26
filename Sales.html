@@ -7,6 +7,7 @@
 	<title>Sales Page</title>
 	<!-- Bootstrap -->
 	<link href="css/bootstrap.min.css" rel="stylesheet" />
+	<link href="css/PHP-SRePS.css" rel="stylesheet" />
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -35,6 +36,22 @@
 			<div class="col-md-12">
 				<fieldset>
 					<h1>Sales Page Form</h1>
+					<p>
+						<label for="productName">Product Name:</label>
+						<input type="text" id="productName" placeholder="Name of item">
+						<label for="purchasedDate">Purchased Date:</label>
+						<input type="date" id="purchasedDate">
+					</p>
+					<p>
+						<label for="quantitySold">Quantity Sold:</label>
+						<input type="number" id="quantitySold">
+						<label for="price">Price:</label>
+						<input type="text" id="price" placeholder="$0.00">
+					</p>
+					<p>
+						<input type="button" class="btn btn-primary" value="Submit Product" >
+						<input type="button" class="btn btn-danger"value="Clear Form">
+					</p>
 				</fieldset>
 			</div>
 		</div>
