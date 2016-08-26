@@ -5,7 +5,7 @@ app.config(['$routeProvider', function ($routeProvider) {
 		.when('/Sales', {
 			templateUrl: "templates/Sales.html"
 		})
-        .when('/Sales', {
+        .when('/Items', {
 			templateUrl: "templates/Items.html",
             controller: "itemsCtrl"
         
