@@ -14,6 +14,11 @@
 			</p>
 		</fieldset>
 	</div>
+  
+    <!--Edit Item Information-->
+    <div>
+        <p data-ng-repeat="item in items">{{item}}<span class="btn btn-default" data-ng-click="editItem($index)">Edit</span></p>
+    </div>
 </div>
 <div class="row">
 	<div class="col-md-12">
