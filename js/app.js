@@ -5,19 +5,27 @@ app.config(['$routeProvider', function ($routeProvider) {
 		.when('/Sales', {
 			templateUrl: "templates/Sales.html"
 		})
-        .when('/Sales', {
+		.when('/Stock', {
 			templateUrl: "templates/Items.html",
-            controller: "itemsCtrl"
-        
-		})
+			controller: "itemsCtrl"
+		});
 }]);
 
-app.controller('itemsCtrl',
-    function($scope)
-    {  
-        $scope.editItem = function(index)
-        {
-            
-        }
-    }
-);
+app.controller('itemsCtrl', function($scope)
+{
+	$scope.items = [];
+	
+	$scope.onSubmit = function()
+	{
+		item = {};
+		item.name = $scope.itemName;
+		item.price = $scope.itemPrice;
+		item.quantity = $scope.itemQuantity;
+		$scope.items.push(item);
+	}
+	
+	$scope.editItem = function(index)
+	{
+
+	}
+});
