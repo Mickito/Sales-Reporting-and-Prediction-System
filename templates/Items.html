@@ -29,7 +29,7 @@
 					<td>{{item.name}}</td>
 					<td>{{item.price}}</td>
 					<td>{{item.quantity}}</td>
-					<td><input type="number" /> <input type="button" class="btn btn-default" /></td>
+					<td><input type="number" /> <button class="btn btn-default" data-ng-click="editItem($index)">Edit</button></td>
 				</tr>
 			</tbody>
 		</table>
