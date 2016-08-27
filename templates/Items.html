@@ -1,17 +1,21 @@
 <div class="row">
 	<div class="col-xs-12">
 		<fieldset>
-			<h1>Items</h1>
-			<p>
-				<label for="productName">Product Name:</label>
-				<input type="text" id="productName" placeholder="Name of item" />
-				<label for="price">Price ($):</label>
-				<input type="number" id="price" placeholder="$0.00" />
-			</p>
-			<p>
-				<input type="button" class="btn btn-primary" value="Submit Product" />
-				<input type="button" class="btn btn-danger" value="Clear Form" />
-			</p>
+			<form name="itemForm">
+				<h1>Items</h1>
+				<p>
+					<label for="productName">Product Name:</label>
+					<input type="text" id="productName" placeholder="Name of item" data-ng-model="itemName" required="true" />
+					<label for="price">Price ($):</label>
+					<input type="number" id="price" placeholder="$0.00" data-ng-model="itemPrice" required="true" />
+					<label for="quantity">Quantity:</label>
+					<input type="number" id="quantity" placeholder="" data-ng-model="itemQuantity" required="true" />
+				</p>
+				<p>
+					<button type="button" data-ng-disabled="itemForm.$invalid" class="btn btn-primary" data-ng-click="onSubmit()" >Submit Product</button>
+					<button type="reset" class="btn btn-danger">Clear Form</button>
+				</p>
+			</form>
 		</fieldset>
 	</div>
 </div>
@@ -22,7 +26,7 @@
 				<th>Name</th>
 				<th>Price</th>
 				<th>Quantity</th>
-				<th></th>
+				<th>Edit</th>
 			</thead>
 			<tbody>
 				<tr data-ng-repeat="item in items">
