@@ -15,9 +15,11 @@ app.config(['$routeProvider', function ($routeProvider) {
 app.controller('itemsCtrl', function($scope)
 {
 	$scope.items = [];
-	
+	$scope.isEdit = false;
+    $scope.arrayIndex = -1;
 	$scope.onSubmit = function()
 	{
+       
 		item = {};
 		item.name = $scope.itemName;
 		item.price = $scope.itemPrice;
@@ -27,8 +29,23 @@ app.controller('itemsCtrl', function($scope)
 	
 	$scope.editItem = function(index)
 	{
-
+        $scope.isEdit = true;
+        $scope.itemName = $scope.items[index].name;
+        $scope.itemPrice = $scope.items[index].price;
+        $scope.itemQuantity = $scope.items[index].quantity;
+        
+        $scope.arrayIndex = index;
 	}
+    
+    $scope.onUpdate = function()
+    {
+
+        alert($scope.arrayIndex);
+        //update the item through index
+        $scope.items[$scope.arrayIndex].name = $scope.itemName;
+        $scope.items[$scope.arrayIndex].price = $scope.itemPrice;
+        $scope.items[$scope.arrayIndex].quantity = $scope.itemQuantity;
+    }
 });
 
 app.controller('temporyData', function ($scope, $http)
