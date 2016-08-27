@@ -15,6 +15,9 @@
 					<button type="button" data-ng-disabled="itemForm.$invalid" class="btn btn-primary" data-ng-click="onSubmit()" >Submit Product</button>
 					<button type="reset" class="btn btn-danger">Clear Form</button>
 				</p>
+                <p>
+                    <button type="button" class="btn btn-primary" data-ng-click="onUpdate()" data-ng-show="isEdit == true">Update</button>
+                </p>
 			</form>
 		</fieldset>
 	</div>
