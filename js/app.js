@@ -79,10 +79,6 @@ app.controller('itemsCtrl', function ($scope, $rootScope) {
 
 app.controller('saleCtrl', function ($scope, $rootScope) {
 	$scope.items = $rootScope.itemValue;
-	$scope.productName;
-	$scope.productPrice;
-	$scope.purchasedDate;
-	$scope.quantitySold;
 	
 	$scope.onSubmit = function () {
 		item = {};
@@ -103,8 +99,8 @@ app.controller('saleCtrl', function ($scope, $rootScope) {
 	$scope.onReset = function () {
 		$scope.productName = "";
 		$scope.productPrice = "";
-		$scope.purchasedDate = "";
-		$scope.quantitySold = "";
+		$scope.productDate = "";
+		$scope.productSold = "";
 
 	}
 });
