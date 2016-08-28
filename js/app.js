@@ -24,8 +24,6 @@ app.run(function ($rootScope) {
 			, price: 50.00
 			, quantity: 500
 		}
-
-
 		
 		, {
 			name: "Banan"
@@ -79,14 +77,18 @@ app.controller('itemsCtrl', function ($scope, $rootScope) {
 
 app.controller('saleCtrl', function ($scope, $rootScope) {
 	$scope.items = $rootScope.itemValue;
-	
+
 	$scope.onSubmit = function () {
-		item = {};
-		item.name = $scope.productName;
-		item.price = $scope.productPrice;
-		item.date = $scope.productDate;
-		item.sold = $scope.productSold;
-		$scope.items.push(item);
+
+		var data = JSON.stringify({name: $scope.productName, price: $scope.productPrice, sold: $scope.productSold, date: $scope.productDate});
+
+		$http.post('websiteURL/Database_connection.php/theDatabase', data)
+			.then(function (response) {
+				if (response.data)
+				$scope.Feedback = "Data successfully inserted.";
+			}, function (response) {
+				$scope.Feedback = "Service does not exist";
+			});
 	}
 
 	$scope.editProduct = function (index) {
