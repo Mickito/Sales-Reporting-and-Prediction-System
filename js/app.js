@@ -2,6 +2,10 @@ var app = angular.module('myApp', ['ngRoute']);
 
 app.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
+		.when('/', {
+			templateUrl: "templates/Sales.html"
+			, controller: "saleCtrl"
+		})
 		.when('/Sales', {
 			templateUrl: "templates/Sales.html"
 			, controller: "saleCtrl"
@@ -20,6 +24,9 @@ app.run(function ($rootScope) {
 			, price: 50.00
 			, quantity: 500
 		}
+
+
+		
 		, {
 			name: "Banan"
 			, date: "1472418726"
@@ -72,7 +79,11 @@ app.controller('itemsCtrl', function ($scope, $rootScope) {
 
 app.controller('saleCtrl', function ($scope, $rootScope) {
 	$scope.items = $rootScope.itemValue;
-
+	$scope.productName;
+	$scope.productPrice;
+	$scope.purchasedDate;
+	$scope.quantitySold;
+	
 	$scope.onSubmit = function () {
 		item = {};
 		item.name = $scope.productName;
@@ -80,5 +91,20 @@ app.controller('saleCtrl', function ($scope, $rootScope) {
 		item.date = $scope.productDate;
 		item.sold = $scope.productSold;
 		$scope.items.push(item);
+	}
+
+	$scope.editProduct = function (index) {
+		$scope.productName = $scope.items[index].name;
+		$scope.productDate = $scope.items[index].date;
+		$scope.productPrice = $scope.items[index].price;
+		$scope.productSold = $scope.items[index].sold;
+	}
+
+	$scope.onReset = function () {
+		$scope.productName = "";
+		$scope.productPrice = "";
+		$scope.purchasedDate = "";
+		$scope.quantitySold = "";
+
 	}
 });
