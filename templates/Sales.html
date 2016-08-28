@@ -1,4 +1,4 @@
-<div class="row" data-ng-controller="temporyData">
+<div class="row" data-ng-controller="saleCtrl">
 	<div class="col-md-12">
 		<fieldset>
 			<h1>Sales Page Form</h1>
@@ -36,11 +36,11 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="data in temporyData">
-						<td headers="pdtName">{{data.productName}}</td>
-						<td headers="pchdDate">{{data.purchasedDate}}</td>
-						<td headers="qnttySold">{{data.quantitySold}}</td>
-						<td headers="Tprice">{{data.totalprice}}</td>
+					<tr data-ng-repeat="item in items">
+						<td headers="pdtName">{{item.name}}</td>
+						<td headers="pchdDate">{{item.date}}</td>
+						<td headers="qnttySold">{{item.sold}}</td>
+						<td headers="Tprice">{{item.price}}</td>
 						<td headers="edit"></td>
 						<td headers="quickSave"></td>
 					</tr>
