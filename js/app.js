@@ -15,14 +15,14 @@ app.config(['$routeProvider', function ($routeProvider) {
 app.run(function ($rootScope) {
 	$rootScope.itemValue = [{
 			name: "Apples"
-			, date: "22/02/1930"
+			, date: "1472418726"
 			, sold: "5"
 			, price: 50.00
 			, quantity: 500
 		}
 		, {
 			name: "Banan"
-			, date: "25/02/1930"
+			, date: "1472418726"
 			, sold: "50"
 			, price: 530.00
 			, quantity: 600
@@ -72,4 +72,13 @@ app.controller('itemsCtrl', function ($scope, $rootScope) {
 
 app.controller('saleCtrl', function ($scope, $rootScope) {
 	$scope.items = $rootScope.itemValue;
+
+	$scope.onSubmit = function () {
+		item = {};
+		item.name = $scope.productName;
+		item.price = $scope.productPrice;
+		item.date = $scope.productDate;
+		item.sold = $scope.productSold;
+		$scope.items.push(item);
+	}
 });
