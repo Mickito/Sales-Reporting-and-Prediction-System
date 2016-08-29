@@ -19,16 +19,16 @@ app.config(['$routeProvider', function ($routeProvider) {
 app.run(function ($rootScope) {
 	$rootScope.itemValue = [{
 			name: "Apples"
-			, date: "1472418726"
-			, sold: "5"
+			, date: 1472418726
+			, sold: 5
 			, price: 50.00
 			, quantity: 500
 		}
 		
 		, {
 			name: "Banan"
-			, date: "1472418726"
-			, sold: "50"
+			, date: 1472418726
+			, sold: 50
 			, price: 530.00
 			, quantity: 600
 	}];

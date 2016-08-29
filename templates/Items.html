@@ -24,19 +24,20 @@
 </div>
 <div class="row">
 	<div class="col-xs-12">
-		<table class="table">
+		<div class="table-responsive">
+			<table class="table table-striped tabel-hover">
 			<thead>
-				<th>Name</th>
-				<th>Price</th>
-				<th>Quantity</th>
-				<th>Edit</th>
+				<th class="col-md-6" id="tableName">Name</th>
+				<th class="col-md-2" id="tablePrice">Price</th>
+				<th class="col-md-2" id="tableQuantity">Quantity</th>
+				<th class="col-md-2" id="tableEdit">Edit</th>
 			</thead>
 			<tbody>
 				<tr data-ng-repeat="item in items">
-					<td>{{item.name}}</td>
-					<td>{{item.price}}</td>
-					<td>{{item.quantity}}</td>
-					<td><input type="number" /> <button class="btn btn-default" data-ng-click="editItem($index)">Edit</button></td>
+					<td headers="tableName">{{item.name}}</td>
+					<td headers="tablePrice">{{item.price}}</td>
+					<td headers="tableQuantity">{{item.quantity}}</td>
+					<td headers="tableEdit"><input type="number" /> <button class="btn btn-default" data-ng-click="editItem($index)">Edit</button></td>
 				</tr>
 			</tbody>
 		</table>
