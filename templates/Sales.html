@@ -1,22 +1,22 @@
-<div class="row" data-ng-controller="temporyData">
+<div class="row" data-ng-controller="saleCtrl">
 	<div class="col-md-12">
 		<fieldset>
 			<h1>Sales Page Form</h1>
 			<p>
 				<label for="productName">Product Name:</label>
-				<input type="text" id="productName" placeholder="Name of item">
+				<input type="text" id="productName" data-ng-model="productName" placeholder="Name of item" />
 				<label for="purchasedDate">Purchased Date:</label>
-				<input type="date" id="purchasedDate">
+				<input type="date" id="purchasedDate" data-ng-model="productDate" />
 			</p>
 			<p>
-				<label for="quantitySold">Quantity Sold:</label>
-				<input type="number" id="quantitySold">
-				<label for="totalPrice">Total Price:</label>
-				<input type="text" id="price" placeholder="$0.00">
+				<label for="productSold">Quantity Sold:</label>
+				<input type="number" id="productSold" placeholder="" data-ng-model="productSold" />
+				<label for="productPrice">Total Price:</label>
+				<input type="number" id="productPrice" placeholder="$0.00" data-ng-model="productPrice" />
 			</p>
 			<p>
-				<input type="button" class="btn btn-primary" value="Submit Product">
-				<input type="button" class="btn btn-danger" value="Clear Form">
+				<input type="button" class="btn btn-primary" value="Submit Product" data-ng-click="onSubmit()">
+				<input type="button" class="btn btn-danger" value="Clear Form" data-ng-click="onReset()">
 			</p>
 		</fieldset>
 	</div>
@@ -36,12 +36,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr data-ng-repeat="data in temporyData">
-						<td headers="pdtName">{{data.productName}}</td>
-						<td headers="pchdDate">{{data.purchasedDate}}</td>
-						<td headers="qnttySold">{{data.quantitySold}}</td>
-						<td headers="Tprice">{{data.totalprice}}</td>
-						<td headers="edit"></td>
+					<tr data-ng-repeat="item in items">
+						<td headers="pdtName">{{item.name}}</td>
+						<td headers="pchdDate">{{item.date | date : format : mediumDate}}</td>
+						<td headers="qnttySold">{{item.sold}}</td>
+						<td headers="Tprice">{{item.price}}</td>
+						<td headers="edit"><button class="btn btn-default" data-ng-click="editProduct($index)">Edit</button></td>
 						<td headers="quickSave"></td>
 					</tr>
 				</tbody>
