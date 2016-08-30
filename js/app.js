@@ -32,31 +32,38 @@ app.run(function ($rootScope) {
 			, price: 530.00
 			, quantity: 600
 	}];
-
 });
 
-app.controller('itemsCtrl', function ($scope, $rootScope) {
+app.factory('databaseData',['$http', function ($http){
+			var factory = {};
+			
+			factory.postData = function(data){
+				return $http.post('http://opax.swin.edu.au/~100677695/sreps/database_connection.php/item', data);
+			};
+			return factory;
+}]);
+
+app.controller('itemsCtrl', function ($scope, $rootScope, databaseData) {
 	$scope.items = $rootScope.itemValue;
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
 
 	$scope.onSubmit = function () {
+		item = {};
 
-//		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
-//
-//		$http.post('http://opax.swin.edu.au/~100677695/sreps/database_connection.php/item', data)
-//			.then(function (response) {
-//				if (response.data)
-//				$scope.Feedback = "Data successfully inserted.";
-//			}, function (response) {
-//				$scope.Feedback = "Service does not exist";
-//			}); 
-        
-        item = {};
-		item.name = $scope.itemName;
-		item.price = $scope.itemPrice;
-		item.quantity = $scope.itemQuantity;
-		$scope.items.push(item);
+		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
+
+		factory.postData(data)
+			.success(function () {
+				$scope.status = 'Inserted Items!';
+				item.name = $scope.itemName;
+				item.price = $scope.itemPrice;
+				item.quantity = $scope.itemQuantity;
+				$scope.items.push(item);
+			})
+			.error(function (error) {
+				$scope.status = 'Unable to insert items: ' + error.message;
+			})
 	}
 
 	$scope.editItem = function (index) {
