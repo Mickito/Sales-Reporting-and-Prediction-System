@@ -42,19 +42,27 @@ app.controller('itemsCtrl', function ($scope, $rootScope) {
 
 	$scope.onSubmit = function () {
 
-		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
-
-		$http.post('http://opax.swin.edu.au/~100677695/sreps/database_connection.php/item', data)
-			.then(function (response) {
-				if (response.data)
-				$scope.Feedback = "Data successfully inserted.";
-			}, function (response) {
-				$scope.Feedback = "Service does not exist";
-			});
+//		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
+//
+//		$http.post('http://opax.swin.edu.au/~100677695/sreps/database_connection.php/item', data)
+//			.then(function (response) {
+//				if (response.data)
+//				$scope.Feedback = "Data successfully inserted.";
+//			}, function (response) {
+//				$scope.Feedback = "Service does not exist";
+//			}); 
+        
+        item = {};
+		item.name = $scope.itemName;
+		item.price = $scope.itemPrice;
+		item.quantity = $scope.itemQuantity;
+		$scope.items.push(item);
 	}
 
 	$scope.editItem = function (index) {
+        alert($scope.isEdit)
 		$scope.isEdit = true;
+        alert($scope.isEdit);
 		$scope.itemName = $scope.items[index].name;
 		$scope.itemPrice = $scope.items[index].price;
 		$scope.itemQuantity = $scope.items[index].quantity;
@@ -87,8 +95,11 @@ app.controller('saleCtrl', function ($scope, $rootScope) {
 	}
 
 	$scope.editProduct = function (index) {
+        
+        var convertToDate;
+        convertToDate = new Date($scope.items[index].date);
 		$scope.productName = $scope.items[index].name;
-		$scope.productDate = $scope.items[index].date;
+		$scope.productDate = convertToDate;
 		$scope.productPrice = $scope.items[index].price;
 		$scope.productSold = $scope.items[index].sold;
 	}
