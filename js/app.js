@@ -19,16 +19,16 @@ app.config(['$routeProvider', function ($routeProvider) {
 app.run(function ($rootScope) {
 	$rootScope.itemValue = [{
 			name: "Apples"
-			, date: "1472418726"
-			, sold: "5"
+			, date: 1472418726
+			, sold: 5
 			, price: 50.00
 			, quantity: 500
 		}
 		
 		, {
 			name: "Banan"
-			, date: "1472418726"
-			, sold: "50"
+			, date: 1472418726
+			, sold: 50
 			, price: 530.00
 			, quantity: 600
 	}];
@@ -42,11 +42,15 @@ app.controller('itemsCtrl', function ($scope, $rootScope) {
 
 	$scope.onSubmit = function () {
 
-		item = {};
-		item.name = $scope.itemName;
-		item.price = $scope.itemPrice;
-		item.quantity = $scope.itemQuantity;
-		$scope.items.push(item);
+		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
+
+		$http.post('http://opax.swin.edu.au/~100677695/sreps/database_connection.php/item', data)
+			.then(function (response) {
+				if (response.data)
+				$scope.Feedback = "Data successfully inserted.";
+			}, function (response) {
+				$scope.Feedback = "Service does not exist";
+			});
 	}
 
 	$scope.editItem = function (index) {
@@ -80,15 +84,6 @@ app.controller('saleCtrl', function ($scope, $rootScope) {
 
 	$scope.onSubmit = function () {
 
-		var data = JSON.stringify({name: $scope.productName, price: $scope.productPrice, sold: $scope.productSold, date: $scope.productDate});
-
-		$http.post('websiteURL/Database_connection.php/theDatabase', data)
-			.then(function (response) {
-				if (response.data)
-				$scope.Feedback = "Data successfully inserted.";
-			}, function (response) {
-				$scope.Feedback = "Service does not exist";
-			});
 	}
 
 	$scope.editProduct = function (index) {
