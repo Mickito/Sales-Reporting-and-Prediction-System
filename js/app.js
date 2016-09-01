@@ -22,14 +22,14 @@ app.factory('databaseData',['$http', function ($http){
 			// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this 
 			// under ## the service
 
-			databaseData.postData = function(data){
+			databaseData.postData = function(table, data){
 				alert('attempting to post');
-				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/Test', data);
+				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 
-			databaseData.putData = function(data){
+			databaseData.putData = function(table, data){
 				alert('attempting to put');
-				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/Test', data);
+				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 	
 			return databaseData;
@@ -40,9 +40,9 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
 
-	//at the start of the controller call the factory get request 
+	//at the start of the controller call the factory get request
 	//so fresh data is here
-	// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this 
+	// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this
 	// under ### the controller
 
 	$scope.onSubmit = function () {
@@ -51,7 +51,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 
 		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
 		// but when controller is reloaded the factory get request get will be called.
-		databaseData.postData(data)
+		databaseData.postData("Items", data)
 			.success(function () {
 				$scope.status = 'Inserted Items!';
 				alert($scope.status);
@@ -67,9 +67,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 
 	$scope.editItem = function (index) {
-        alert($scope.isEdit)
 		$scope.isEdit = true;
-        alert($scope.isEdit);
 		$scope.itemName = $scope.items[index].name;
 		$scope.itemPrice = $scope.items[index].price;
 		$scope.itemQuantity = $scope.items[index].quantity;
@@ -103,17 +101,17 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 });
 
-app.controller('saleCtrl', function ($scope, $rootScope) {
-	$scope.items = $rootScope.itemValue;
+app.controller('saleCtrl', function ($scope, databaseData) {
+	$scope.items = [];
 
 	$scope.onSubmit = function () {
-
+		
 	}
 
-	$scope.editProduct = function (index) {
+	$scope.editSale = function (index) {
         
-        var convertToDate;
-        convertToDate = new Date($scope.items[index].date);
+		var convertToDate;
+		convertToDate = new Date($scope.items[index].date);
 		$scope.productName = $scope.items[index].name;
 		$scope.productDate = convertToDate;
 		$scope.productPrice = $scope.items[index].price;
