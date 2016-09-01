@@ -103,6 +103,8 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 
 app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.items = [];
+	$scope.editing = false;
+	$scope.arrayIndex = -1;
 
 	$scope.onSubmit = function () {
 		item = {};
@@ -114,20 +116,29 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	}
 
 	$scope.editSale = function (index) {
-        
-		var convertToDate;
-		convertToDate = new Date($scope.items[index].date);
+		$scope.editing = true;
+		$scope.arrayIndex = index;
+		var convertToDate = new Date($scope.items[index].date);
 		$scope.productName = $scope.items[index].name;
 		$scope.productDate = convertToDate;
 		$scope.productPrice = $scope.items[index].price;
 		$scope.productSold = $scope.items[index].sold;
 	}
+	
+	$scope.onUpdate = function() {
+		if ($scope.editing) {
+			$scope.items[$scope.arrayIndex].name = $scope.productName;
+			$scope.items[$scope.arrayIndex].price = $scope.productPrice;
+			$scope.items[$scope.arrayIndex].date = $scope.productDate;
+			$scope.items[$scope.arrayIndex].sold = $scope.productSold;
+		}
+	}
 
 	$scope.onReset = function () {
+		$scope.editing = false;
 		$scope.productName = "";
 		$scope.productPrice = "";
 		$scope.productDate = "";
 		$scope.productSold = "";
-
 	}
 });
