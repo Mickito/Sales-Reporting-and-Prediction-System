@@ -110,9 +110,22 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		item = {};
 		item.name = $scope.productName;
 		item.price = $scope.productPrice;
-		item.date = $scope.productDate;
+		item.date = $scope.productDate.getTime();
 		item.sold = $scope.productSold;
 		$scope.items.push(item);
+		
+		var data = JSON.stringify({ItemID: 3, Date: item.date, Quantity: item.sold});
+
+		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
+		// but when controller is reloaded the factory get request get will be called.
+		databaseData.postData("Items", data)
+			.success(function () {
+				
+			})
+			.error(function (error) {
+				$scope.status = 'Unable to insert sale: ' + error.message;
+				alert($scope.status);
+			});
 	}
 
 	$scope.editSale = function (index) {
@@ -129,7 +142,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		if ($scope.editing) {
 			$scope.items[$scope.arrayIndex].name = $scope.productName;
 			$scope.items[$scope.arrayIndex].price = $scope.productPrice;
-			$scope.items[$scope.arrayIndex].date = $scope.productDate;
+			$scope.items[$scope.arrayIndex].date = $scope.productDate.getTime();
 			$scope.items[$scope.arrayIndex].sold = $scope.productSold;
 		}
 	}
