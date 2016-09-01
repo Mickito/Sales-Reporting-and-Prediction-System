@@ -28,13 +28,15 @@
                 <th class="col-md-6" id="tableName">Name</th>
                 <th class="col-md-2" id="tablePrice">Price</th>
                 <th class="col-md-2" id="tableQuantity">Quantity</th>
+                <th class="col-md-2" id="tableDescription">Description</th>
                 <th class="col-md-2" id="tableEdit">Edit</th>
             </thead>
             <tbody>
                 <tr data-ng-repeat="item in items">
-                    <td headers="tableName">{{item.name}}</td>
-                    <td headers="tablePrice">{{item.price}}</td>
-                    <td headers="tableQuantity">{{item.quantity}}</td>
+                    <td headers="tableName">{{item.Name}}</td>
+                    <td headers="tablePrice">{{item.Price}}</td>
+                    <td headers="tableQuantity">{{item.StockQty}}</td>
+                    <td headers="tableDescription">{{item.Description}}</td>
                     <td headers="tableEdit"><button class="btn btn-default" data-ng-click="editItem($index)">Edit</button></td>
                 </tr>
             </tbody>

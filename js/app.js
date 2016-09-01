@@ -22,14 +22,18 @@ app.factory('databaseData',['$http', function ($http){
 			// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this 
 			// under ## the service
 
+			databaseData.getData = function(){
+				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item');
+			}
+
 			databaseData.postData = function(data){
 				alert('attempting to post');
-				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/Test', data);
+				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item', data);
 			};
 
 			databaseData.putData = function(data){
 				alert('attempting to put');
-				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/Test', data);
+				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item', data);
 			};
 	
 			return databaseData;
@@ -40,10 +44,20 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
 
+	function getItem() {
+		databaseData.getData()
+			.then(function (response) {
+				$scope.items = response.data;
+			})
+	}
+
+	getItem();
 	//at the start of the controller call the factory get request 
 	//so fresh data is here
 	// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this 
 	// under ### the controller
+
+	
 
 	$scope.onSubmit = function () {
 		item = {};
@@ -83,7 +97,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		
 			databaseData.putData(data)
 			.success(function () {
-				$scope.status = 'updated Items!';
+				$scope.status = 'Updated items!';
 				alert($scope.status);
 				$scope.items[$scope.arrayIndex].name = $scope.itemName;
 				$scope.items[$scope.arrayIndex].price = $scope.itemPrice;
