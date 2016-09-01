@@ -105,7 +105,12 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.items = [];
 
 	$scope.onSubmit = function () {
-		
+		item = {};
+		item.name = $scope.productName;
+		item.price = $scope.productPrice;
+		item.date = $scope.productDate;
+		item.sold = $scope.productSold;
+		$scope.items.push(item);
 	}
 
 	$scope.editSale = function (index) {
