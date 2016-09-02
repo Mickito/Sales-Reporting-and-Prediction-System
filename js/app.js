@@ -22,18 +22,19 @@ app.factory('databaseData',['$http', function ($http){
 			// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this 
 			// under ## the service
 
-			databaseData.getData = function(){
-				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item');
+			databaseData.getData = function(table){
+				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table);
 			}
 
-			databaseData.postData = function(data){
+			databaseData.postData = function(table, data){
 				alert('attempting to post');
-				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item', data);
+				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 
-			databaseData.putData = function(data){
+			databaseData.putData = function(table, data){
 				alert('attempting to put');
-				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item', data);
+
+				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 	
 			return databaseData;
@@ -54,7 +55,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	getItem();
 	//at the start of the controller call the factory get request 
 	//so fresh data is here
-	// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this 
+	// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this
 	// under ### the controller
 
 	
@@ -65,7 +66,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 
 		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
 		// but when controller is reloaded the factory get request get will be called.
-		databaseData.postData(data)
+		databaseData.postData("Items", data)
 			.success(function () {
 				$scope.status = 'Inserted Items!';
 				alert($scope.status);
@@ -81,9 +82,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 
 	$scope.editItem = function (index) {
-        alert($scope.isEdit)
 		$scope.isEdit = true;
-        alert($scope.isEdit);
 		$scope.itemName = $scope.items[index].name;
 		$scope.itemPrice = $scope.items[index].price;
 		$scope.itemQuantity = $scope.items[index].quantity;
@@ -117,28 +116,57 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 });
 
-app.controller('saleCtrl', function ($scope, $rootScope) {
-	$scope.items = $rootScope.itemValue;
+app.controller('saleCtrl', function ($scope, databaseData) {
+	$scope.items = [];
+	$scope.editing = false;
+	$scope.arrayIndex = -1;
 
 	$scope.onSubmit = function () {
+		item = {};
+		item.name = $scope.productName;
+		item.price = $scope.productPrice;
+		item.date = $scope.productDate.getTime();
+		item.sold = $scope.productSold;
+		$scope.items.push(item);
+		
+		var data = JSON.stringify({ItemID: 3, Date: item.date, Quantity: item.sold});
 
+		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
+		// but when controller is reloaded the factory get request get will be called.
+		databaseData.postData("Items", data)
+			.success(function () {
+				
+			})
+			.error(function (error) {
+				$scope.status = 'Unable to insert sale: ' + error.message;
+				alert($scope.status);
+			});
 	}
 
-	$scope.editProduct = function (index) {
-        
-        var convertToDate;
-        convertToDate = new Date($scope.items[index].date);
+	$scope.editSale = function (index) {
+		$scope.editing = true;
+		$scope.arrayIndex = index;
+		var convertToDate = new Date($scope.items[index].date);
 		$scope.productName = $scope.items[index].name;
 		$scope.productDate = convertToDate;
 		$scope.productPrice = $scope.items[index].price;
 		$scope.productSold = $scope.items[index].sold;
 	}
+	
+	$scope.onUpdate = function() {
+		if ($scope.editing) {
+			$scope.items[$scope.arrayIndex].name = $scope.productName;
+			$scope.items[$scope.arrayIndex].price = $scope.productPrice;
+			$scope.items[$scope.arrayIndex].date = $scope.productDate.getTime();
+			$scope.items[$scope.arrayIndex].sold = $scope.productSold;
+		}
+	}
 
 	$scope.onReset = function () {
+		$scope.editing = false;
 		$scope.productName = "";
 		$scope.productPrice = "";
 		$scope.productDate = "";
 		$scope.productSold = "";
-
 	}
 });

@@ -11,7 +11,7 @@
                 <input type="number" id="quantity" placeholder="" data-ng-model="itemQuantity" required="true" />
             </p>
             <p>
-                <button type="button" data-ng-disabled="itemForm.$invalid" class="btn btn-primary" data-ng-click="onSubmit()" >Submit Product</button>
+                <button type="button" data-ng-disabled="itemForm.$invalid" class="btn btn-primary" data-ng-click="onSubmit()" data-ng-hide="isEdit == true" >Submit Product</button>
                 <button type="button" class="btn btn-danger" data-ng-click="onReset()">Clear Form</button>
             </p>
             <p>
