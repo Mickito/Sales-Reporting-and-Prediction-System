@@ -26,10 +26,6 @@ app.factory('databaseData',['$http', function ($http){
 				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table);
 			};
 
-			/*databaseData.getData = function(table){
-				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table);
-			}*/
-
 			databaseData.postData = function(table, data){
 				alert('attempting to post');
 				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
@@ -57,12 +53,11 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 
 	getItem();
-	//at the start of the controller call the factory get request 
+	//at the start of the controller call the factory get request
 	//so fresh data is here
 	// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this
 	// under ### the controller
 
-	
 
 	$scope.onSubmit = function () {
 		item = {};
@@ -71,25 +66,24 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
 		// but when controller is reloaded the factory get request get will be called.
 		databaseData.postData("Item", data)
-			.success(function () {
-				$scope.status = 'Inserted Items!';
-				alert($scope.status);
-				item.name = $scope.itemName;
-				item.price = $scope.itemPrice;
-				item.quantity = $scope.itemQuantity;
-				$scope.items.push(item);
-			})
-			.error(function (error) {
-				$scope.status = 'Unable to insert items: ' + error.message;
-				alert($scope.status);
-			});
+		.success(function () {
+			$scope.status = 'Inserted Items!';
+			item.Name = $scope.itemName;
+			item.Price = $scope.itemPrice;
+			item.StockQty = $scope.itemQuantity;
+			$scope.items.push(item);
+		})
+		.error(function (error) {
+			$scope.status = 'Unable to insert items: ' + error.message;
+		});
+		alert($scope.status);
 	}
 
 	$scope.editItem = function (index) {
 		$scope.isEdit = true;
-		$scope.itemName = $scope.items[index].name;
-		$scope.itemPrice = $scope.items[index].price;
-		$scope.itemQuantity = $scope.items[index].quantity;
+		$scope.itemName = $scope.items[index].Name;
+		$scope.itemPrice = $scope.items[index].Price;
+		$scope.itemQuantity = $scope.items[index].StockQty;
 
 		$scope.arrayIndex = index;
 	}
@@ -98,18 +92,17 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 		alert($scope.arrayIndex);
 		
-			databaseData.putData("Item", data)
-			.success(function () {
-				$scope.status = 'Updated items!';
-				alert($scope.status);
-				$scope.items[$scope.arrayIndex].name = $scope.itemName;
-				$scope.items[$scope.arrayIndex].price = $scope.itemPrice;
-				$scope.items[$scope.arrayIndex].quantity = $scope.itemQuantity;
-			})
-			.error(function (error) {
-				$scope.status = 'Unable to update items: ' + error.message;
-				alert($scope.status);
-			});
+		databaseData.putData("Item", data)
+		.success(function () {
+			$scope.status = 'Updated items!';
+			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
+			$scope.items[$scope.arrayIndex].Price = $scope.itemPrice;
+			$scope.items[$scope.arrayIndex].StockQty = $scope.itemQuantity;
+		})
+		.error(function (error) {
+			$scope.status = 'Unable to update items: ' + error.message;
+		});
+		alert($scope.status);
 	}
 
 	$scope.onReset = function () {
@@ -126,34 +119,34 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.arrayIndex = -1;
 
 	function getSales() {
-		databaseData.getData("TransactionItem")
-			.then(function (response) {
-				$scope.items = response.data;
-			})
+		databaseData.getData("Sales")
+		.then(function (response) {
+			$scope.sales = response.data;
+		})
 	}
 
 	getSales();
 
 	$scope.onSubmit = function () {
-		item = {};
-		item.name = $scope.productName;
-		item.price = $scope.productPrice;
-		item.date = $scope.productDate.getTime();
-		item.sold = $scope.productSold;
-		$scope.items.push(item);
+		sale = {};
+		sale.Name = $scope.productName;
+		sale.Price = $scope.productPrice;
+		sale.Date = $scope.productDate.getTime();
+		sale.Quantity = $scope.productSold;
+		$scope.items.push(sale);
 		
-		var data = JSON.stringify({ItemID: 3, Date: item.date, Quantity: item.sold});
+		var data = JSON.stringify({ItemID: 3, Date: sale.Date, Quantity: sale.Quantity});
 
 		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
 		// but when controller is reloaded the factory get request get will be called.
-		databaseData.postData("TransactionItem", data)
-			.success(function () {
-				
-			})
-			.error(function (error) {
-				$scope.status = 'Unable to insert sale: ' + error.message;
-				alert($scope.status);
-			});
+		databaseData.postData("Sales", data)
+		.success(function () {
+
+		})
+		.error(function (error) {
+			$scope.status = 'Unable to insert sale: ' + error.message;
+			alert($scope.status);
+		});
 	}
 
 	$scope.editSale = function (index) {
