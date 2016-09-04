@@ -19,7 +19,7 @@ app.config(['$routeProvider', function ($routeProvider) {
 app.factory('databaseData',['$http', function ($http){
 			var databaseData = {};
 			//return a http get here
-			// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this 
+			// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this
 			// under ## the service
 
 			databaseData.getData = function(table){
@@ -72,9 +72,11 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 			item.Price = $scope.itemPrice;
 			item.StockQty = $scope.itemQuantity;
 			$scope.items.push(item);
+			alert($scope.status);
 		})
 		.error(function (error) {
 			$scope.status = 'Unable to insert items: ' + error.message;
+			alert($scope.status);
 		});
 		alert($scope.status);
 	}
@@ -114,7 +116,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 });
 
 app.controller('saleCtrl', function ($scope, databaseData) {
-	$scope.items = [];
+	$scope.sales = [];
 	$scope.editing = false;
 	$scope.arrayIndex = -1;
 
@@ -129,42 +131,43 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	$scope.onSubmit = function () {
 		sale = {};
-		sale.Name = $scope.productName;
+		sale.ItemID = $scope.productID;
 		sale.Price = $scope.productPrice;
 		sale.Date = $scope.productDate.getTime();
 		sale.Quantity = $scope.productSold;
-		$scope.items.push(sale);
+		$scope.sales.push(sale);
 		
-		var data = JSON.stringify({ItemID: 3, Date: sale.Date, Quantity: sale.Quantity});
+		var data = JSON.stringify({ItemID: sale.ItemID, Date: sale.Date, Quantity: sale.Quantity});
 
 		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
 		// but when controller is reloaded the factory get request get will be called.
 		databaseData.postData("Sales", data)
 		.success(function () {
-
+			$scope.status = 'Sale inserted successfully';
 		})
 		.error(function (error) {
 			$scope.status = 'Unable to insert sale: ' + error.message;
 			alert($scope.status);
 		});
+		alert($scope.status);
 	}
 
 	$scope.editSale = function (index) {
 		$scope.editing = true;
 		$scope.arrayIndex = index;
-		var convertToDate = new Date($scope.items[index].date);
-		$scope.productName = $scope.items[index].name;
+		var convertToDate = new Date($scope.sales[index].date);
+		$scope.productName = $scope.sales[index].name;
 		$scope.productDate = convertToDate;
-		$scope.productPrice = $scope.items[index].price;
-		$scope.productSold = $scope.items[index].sold;
+		$scope.productPrice = $scope.sales[index].price;
+		$scope.productSold = $scope.sales[index].sold;
 	}
 	
 	$scope.onUpdate = function() {
 		if ($scope.editing) {
-			$scope.items[$scope.arrayIndex].name = $scope.productName;
-			$scope.items[$scope.arrayIndex].price = $scope.productPrice;
-			$scope.items[$scope.arrayIndex].date = $scope.productDate.getTime();
-			$scope.items[$scope.arrayIndex].sold = $scope.productSold;
+			$scope.sales[$scope.arrayIndex].Name = $scope.productName;
+			$scope.sales[$scope.arrayIndex].Price = $scope.productPrice;
+			$scope.sales[$scope.arrayIndex].Date = $scope.productDate.getTime();
+			$scope.sales[$scope.arrayIndex].Quantity = $scope.productSold;
 		}
 	}
 
