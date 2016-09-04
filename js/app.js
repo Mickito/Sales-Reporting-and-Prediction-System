@@ -24,7 +24,11 @@ app.factory('databaseData',['$http', function ($http){
 
 			databaseData.getData = function(table){
 				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table);
-			}
+			};
+
+			/*databaseData.getData = function(table){
+				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table);
+			}*/
 
 			databaseData.postData = function(table, data){
 				alert('attempting to post');
@@ -46,7 +50,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.arrayIndex = -1;
 
 	function getItem() {
-		databaseData.getData()
+		databaseData.getData("Item")
 			.then(function (response) {
 				$scope.items = response.data;
 			})
@@ -66,7 +70,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 
 		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
 		// but when controller is reloaded the factory get request get will be called.
-		databaseData.postData("Items", data)
+		databaseData.postData("Item", data)
 			.success(function () {
 				$scope.status = 'Inserted Items!';
 				alert($scope.status);
@@ -94,7 +98,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 		alert($scope.arrayIndex);
 		
-			databaseData.putData(data)
+			databaseData.putData("Item", data)
 			.success(function () {
 				$scope.status = 'Updated items!';
 				alert($scope.status);
@@ -121,6 +125,15 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.editing = false;
 	$scope.arrayIndex = -1;
 
+	function getSales() {
+		databaseData.getData("TransactionItem")
+			.then(function (response) {
+				$scope.items = response.data;
+			})
+	}
+
+	getSales();
+
 	$scope.onSubmit = function () {
 		item = {};
 		item.name = $scope.productName;
@@ -133,7 +146,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
 		// but when controller is reloaded the factory get request get will be called.
-		databaseData.postData("Items", data)
+		databaseData.postData("TransactionItem", data)
 			.success(function () {
 				
 			})
