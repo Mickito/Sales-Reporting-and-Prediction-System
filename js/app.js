@@ -18,9 +18,6 @@ app.config(['$routeProvider', function ($routeProvider) {
 
 app.factory('databaseData',['$http', function ($http){
 			var databaseData = {};
-			//return a http get here
-			// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this
-			// under ## the service
 
 			databaseData.getData = function(table){
 				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table);
@@ -53,18 +50,11 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 
 	getItem();
-	//at the start of the controller call the factory get request
-	//so fresh data is here
-	// https://www.airpair.com/javascript/posts/services-in-angularjs-simplified-with-examples view this
-	// under ### the controller
-
 
 	$scope.onSubmit = function () {
 		item = {};
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 
-		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
-		// but when controller is reloaded the factory get request get will be called.
 		databaseData.postData("Item", data)
 		.success(function () {
 			$scope.status = 'Inserted Items!';
@@ -84,14 +74,14 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.editItem = function (index) {
 		$scope.isEdit = true;
 		$scope.itemName = $scope.items[index].Name;
-		$scope.itemPrice = $scope.items[index].Price;
-		$scope.itemQuantity = $scope.items[index].StockQty;
-
+		$scope.itemPrice = parseInt($scope.items[index].Price);
+		$scope.itemQuantity = parseInt($scope.items[index].StockQty);
+		$scope.itemID = $scope.items[index].ItemID;
 		$scope.arrayIndex = index;
 	}
 
 	$scope.onUpdate = function () {
-		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
+		var data = JSON.stringify({ItemID: $scope.itemID, Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 		alert($scope.arrayIndex);
 		
 		databaseData.putData("Item", data)
@@ -139,8 +129,6 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		
 		var data = JSON.stringify({ItemID: sale.ItemID, Date: sale.Date, Quantity: sale.Quantity});
 
-		// this will post to database and also store a tempory name, price and quantity in table in till the controller is reloaded 
-		// but when controller is reloaded the factory get request get will be called.
 		databaseData.postData("Sales", data)
 		.success(function () {
 			$scope.status = 'Sale inserted successfully';
@@ -155,11 +143,11 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.editSale = function (index) {
 		$scope.editing = true;
 		$scope.arrayIndex = index;
-		var convertToDate = new Date($scope.sales[index].date);
-		$scope.productName = $scope.sales[index].name;
+		$scope.productID = parseInt($scope.sales[index].ItemID);
+		$scope.productPrice = parseInt($scope.sales[index].Price);
+		$scope.productSold = parseInt($scope.sales[index].Quantity);
+		var convertToDate = new Date($scope.sales[index].Date);
 		$scope.productDate = convertToDate;
-		$scope.productPrice = $scope.sales[index].price;
-		$scope.productSold = $scope.sales[index].sold;
 	}
 	
 	$scope.onUpdate = function() {
