@@ -28,9 +28,9 @@ app.factory('databaseData',['$http', function ($http){
 				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 
-			databaseData.putData = function(table, data){
+			databaseData.putData = function(table, data, id){
 				alert('attempting to put');
-				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
+				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table + "/ItemID/" + id, data);
 			};
 	
 			return databaseData;
@@ -79,18 +79,18 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 
 	$scope.onUpdate = function () {
-		var data = JSON.stringify({ItemID: $scope.itemID, Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
+		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 		alert($scope.itemID);
 		
-		databaseData.putData("Item", data)
+		databaseData.putData("Item", data, $scope.itemID)
 		.success(function () {
 			$scope.status = 'Updated items!';
 			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
 			$scope.items[$scope.arrayIndex].Price = $scope.itemPrice;
 			$scope.items[$scope.arrayIndex].StockQty = $scope.itemQuantity;
 		})
-		.error(function (error) {
-			$scope.status = 'Unable to update items: ' + error.message;
+		.error(function (data, status, header, config) {
+			$scope.status = 'Unable to update items: ' + status;
 		});
 		alert($scope.status);
 	}
