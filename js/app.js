@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngRoute']);
+var app = angular.module('myApp', ['ngRoute', 'bootstrap-modal']);
 
 app.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
@@ -30,7 +30,6 @@ app.factory('databaseData',['$http', function ($http){
 
 			databaseData.putData = function(table, data){
 				alert('attempting to put');
-
 				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 	
@@ -76,13 +75,12 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		$scope.itemName = $scope.items[index].Name;
 		$scope.itemPrice = parseInt($scope.items[index].Price);
 		$scope.itemQuantity = parseInt($scope.items[index].StockQty);
-		$scope.itemID = $scope.items[index].ItemID;
-		$scope.arrayIndex = index;
+		$scope.itemID = parseInt($scope.items[index].ItemID);
 	}
 
 	$scope.onUpdate = function () {
 		var data = JSON.stringify({ItemID: $scope.itemID, Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
-		alert($scope.arrayIndex);
+		alert($scope.itemID);
 		
 		databaseData.putData("Item", data)
 		.success(function () {
