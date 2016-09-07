@@ -28,9 +28,9 @@ app.factory('databaseData',['$http', function ($http){
 				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 
-			databaseData.putData = function(table, data, id){
+			databaseData.putData = function(data, key){
 				alert('attempting to put');
-				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table + "/ItemID/" + id, data);
+				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item/ItemID/' + key, data);
 			};
 	
 			return databaseData;
@@ -76,23 +76,23 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		$scope.itemPrice = parseInt($scope.items[index].Price);
 		$scope.itemQuantity = parseInt($scope.items[index].StockQty);
 		$scope.itemID = parseInt($scope.items[index].ItemID);
+
 	}
 
 	$scope.onUpdate = function () {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
-		alert($scope.itemID);
+		var key = $scope.ItemID;
 		
-		databaseData.putData("Item", data, $scope.itemID)
+		databaseData.putData(data, key)
 		.success(function () {
-			$scope.status = 'Updated items!';
+			alert('Updated items!');
 			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
 			$scope.items[$scope.arrayIndex].Price = $scope.itemPrice;
 			$scope.items[$scope.arrayIndex].StockQty = $scope.itemQuantity;
 		})
 		.error(function (data, status, header, config) {
-			$scope.status = 'Unable to update items: ' + status;
+			alert('Unable to update items: ');
 		});
-		alert($scope.status);
 	}
 
 	$scope.onReset = function () {
