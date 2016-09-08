@@ -28,15 +28,15 @@ app.factory('databaseData',['$http', function ($http){
 				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
 			};
 
-			databaseData.putData = function(datax, key){
+			databaseData.putData = function(data, key){
 				alert('attempting to put');
-				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/Test/Name/'+key, datax);
+				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/Item/ItemID/' + key, data);
 			};
 	
 			return databaseData;
 }]);
 
-app.controller('itemsCtrl', function ($scope, databaseData, $http) {
+app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
@@ -53,7 +53,7 @@ app.controller('itemsCtrl', function ($scope, databaseData, $http) {
 	$scope.onSubmit = function () {
 		item = {};
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
-		alert(data);
+
 		databaseData.postData("Item", data)
 		.success(function () {
 			$scope.status = 'Inserted Items!';
@@ -78,21 +78,22 @@ app.controller('itemsCtrl', function ($scope, databaseData, $http) {
 		$scope.itemID = parseInt($scope.items[index].ItemID);
 
 	}
-	
-	$scope.onUpdate = function (itemName,itemPrice,itemQuantity) {
-		var datax = JSON.stringify({Name: itemName, Price: itemPrice, StockQty: itemQuantity});
-		var url = "http://opax.swin.edu.au/~100677695/data/database_connection.php/Test/Name/"+itemName;
 
-		$http.put(url, datax)
-				.then(function (response) {
-				// depends on the data value
-				// there may be instances of put failure
-					if (response.data)
-					alert("Data successfully updated");
-				}, function (response) {
-					alert("Service not Exists");
-				});
-			};
+	$scope.onUpdate = function () {
+		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
+		var key = $scope.ItemID;
+		
+		databaseData.putData(data, key)
+		.success(function () {
+			alert('Updated items!');
+			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
+			$scope.items[$scope.arrayIndex].Price = $scope.itemPrice;
+			$scope.items[$scope.arrayIndex].StockQty = $scope.itemQuantity;
+		})
+		.error(function (data, status, header, config) {
+			alert('Unable to update items: ');
+		});
+	}
 
 	$scope.onReset = function () {
 		$scope.isEdit = false;
