@@ -33,7 +33,7 @@ switch ($method) {
   case 'GET':
     $sql = "select * from `$table`".($key?" WHERE $fld='$key'":''); break;
   case 'PUT':
-    $sql = "update `$table` set $set where ".($key?"$fld='$key'":'0=1'); break;
+    $sql = "update `$table` set $set where ".($key?"$fld='$key'":"0=1"); break;
   case 'POST':
     $sql = "insert into `$table` set $set"; break;
   case 'DELETE':
