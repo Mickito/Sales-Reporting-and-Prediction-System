@@ -72,6 +72,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 
 	$scope.editItem = function (index) {
 		$scope.isEdit = true;
+		$scope.arrayIndex = index;
 		$scope.itemName = $scope.items[index].Name;
 		$scope.itemPrice = parseInt($scope.items[index].Price);
 		$scope.itemQuantity = parseInt($scope.items[index].StockQty);
