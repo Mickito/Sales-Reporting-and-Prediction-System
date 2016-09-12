@@ -5,7 +5,7 @@ $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
 // connect to the mysql database
-$conn = mysqli_connect('mysql.ict.swin.edu.au', 's100590093', '280294', 's100590093_db');
+$conn = mysqli_connect('localhost', 'root', 'password', 'sreps');
 mysqli_set_charset($conn,'utf8');
  
 // retrieve the table, field name and key value from the path

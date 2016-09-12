@@ -20,17 +20,17 @@ app.factory('databaseData',['$http', function ($http){
 			var databaseData = {};
 
 			databaseData.getData = function(table){
-				return $http.get('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table);
+				return $http.get('data/database_connection.php/' + table);
 			};
 
 			databaseData.postData = function(table, data){
 				alert('attempting to post');
-				return $http.post('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table, data);
+				return $http.post('data/database_connection.php/' + table, data);
 			};
 
 			databaseData.putData = function(table, data, id){
 				alert('attempting to put');
-				return $http.put('http://opax.swin.edu.au/~100677695/data/database_connection.php/' + table + "/ItemID/" + id, data);
+				return $http.put('data/database_connection.php/' + table + "/ItemID/" + id, data);
 			};
 	
 			return databaseData;
@@ -42,7 +42,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.arrayIndex = -1;
 
 	function getItem() {
-		databaseData.getData("Item")
+		databaseData.getData("item")
 			.then(function (response) {
 				$scope.items = response.data;
 			})
@@ -54,7 +54,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		item = {};
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 
-		databaseData.postData("Item", data)
+		databaseData.postData("item", data)
 		.success(function () {
 			$scope.status = 'Inserted Items!';
 			item.Name = $scope.itemName;
@@ -82,7 +82,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 		alert($scope.itemID);
 		
-		databaseData.putData("Item", data, $scope.itemID)
+		databaseData.putData("item", data, $scope.itemID)
 		.success(function () {
 			$scope.status = 'Updated items!';
 			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
@@ -109,7 +109,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.arrayIndex = -1;
 
 	function getSales() {
-		databaseData.getData("Sales")
+		databaseData.getData("sales")
 		.then(function (response) {
 			$scope.sales = response.data;
 		})
@@ -127,7 +127,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		
 		var data = JSON.stringify({ItemID: sale.ItemID, Date: sale.Date, Quantity: sale.Quantity});
 
-		databaseData.postData("Sales", data)
+		databaseData.postData("sales", data)
 		.success(function () {
 			$scope.status = 'Sale inserted successfully';
 		})
