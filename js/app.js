@@ -84,7 +84,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		alert($scope.itemID);
 		
 		databaseData.putData("item", data, $scope.itemID)
-		.success(function () {
+		.then(function () {
 			$scope.status = 'Updated items!';
 			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
 			$scope.items[$scope.arrayIndex].Price = $scope.itemPrice;
