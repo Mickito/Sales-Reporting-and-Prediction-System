@@ -24,12 +24,10 @@ app.factory('databaseData',['$http', function ($http){
 			};
 
 			databaseData.postData = function(table, data){
-				alert('attempting to post');
 				return $http.post('data/database_connection.php/' + table, data);
 			};
 
 			databaseData.putData = function(table, data, column, id){
-				alert('attempting to put');
 				return $http.put('data/database_connection.php/' + table + "/" + column + "/" + id, data);
 			};
 	
@@ -55,19 +53,15 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 
 		databaseData.postData("item", data)
-		.success(function () {
-			$scope.status = 'Inserted Items!';
+		.then(function () {
 			item.Name = $scope.itemName;
 			item.Price = $scope.itemPrice;
 			item.StockQty = $scope.itemQuantity;
 			$scope.items.push(item);
-			alert($scope.status);
-		})
-		.error(function (error) {
-			$scope.status = 'Unable to insert items: ' + error.message;
-			alert($scope.status);
+		},
+		function (response) {
+			
 		});
-		alert($scope.status);
 	}
 
 	$scope.editItem = function (index) {
@@ -81,7 +75,6 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 
 	$scope.onUpdate = function () {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
-		alert($scope.itemID);
 		
 		databaseData.putData("item", data, "ItemID", $scope.itemID)
 		.then(function () {
@@ -89,11 +82,10 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
 			$scope.items[$scope.arrayIndex].Price = $scope.itemPrice;
 			$scope.items[$scope.arrayIndex].StockQty = $scope.itemQuantity;
-		})
-		.error(function (data, status, header, config) {
-			$scope.status = 'Unable to update items: ' + status;
+		},
+		function (response) {
+			
 		});
-		alert($scope.status);
 	}
 
 	$scope.onReset = function () {
@@ -108,6 +100,30 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.sales = [];
 	$scope.editing = false;
 	$scope.arrayIndex = -1;
+	
+	function updatePrices() {
+		for (var i = 0; i < $scope.sales.length; i++) {
+			var id = $scope.sales[i].ItemID;
+			for (var j = 0; j < $scope.items.length; j++) {
+				 if ($scope.items[j].ItemID == id) {
+					 $scope.sales[i].Price = $scope.sales[i].Quantity * $scope.items[j].Price;
+					 break;
+				 }
+			}
+		}
+	}
+
+	function updateNames() {
+		for (var i = 0; i < $scope.sales.length; i++) {
+			var id = $scope.sales[i].ItemID;
+			for (var j = 0; j < $scope.items.length; j++) {
+				 if ($scope.items[j].ItemID == id) {
+					 $scope.sales[i].ItemName = $scope.items[j].Name;
+					 break;
+				 }
+			}
+		}
+	}
 
 	function getSales() {
 		databaseData.getData("sales")
@@ -124,35 +140,12 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		databaseData.getData("item")
 			.then(function (response) {
 				$scope.items = response.data;
+				updateNames();
+				updatePrices();
 			})
 	}
 	getItem();
-	
-	function updatePrices() {
-		for (var i = 0; i < $scope.sales.length; i++) {
-			var id = $scope.sales[i].ItemID;
-			for (var j = 0; j < $scope.items.length; j++) {
-				 if ($scope.items[j].ItemID == id) {
-					 $scope.sales[i].Price = $scope.sales[i].Quantity * $scope.items[j].Price;
-					 break;
-				 }
-			}
-		}
-	}
-	updatePrices();
-	function updateNames() {
-		for (var i = 0; i < $scope.sales.length; i++) {
-			var id = $scope.sales[i].ItemID;
-			for (var j = 0; j < $scope.items.length; j++) {
-				 if ($scope.items[j].ItemID == id) {
-					 $scope.sales[i].ItemName = $scope.items[j].Name;
-					 break;
-				 }
-			}
-		}
-	}
-	updateNames();
-	
+		
 	$scope.onSubmit = function () {
 		sale = {};
 		sale.ItemID = $scope.productID;
@@ -163,14 +156,15 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		var data = JSON.stringify({ItemID: sale.ItemID, Date: sale.Date, Quantity: sale.Quantity});
 
 		databaseData.postData("sales", data)
-		.success(function () {
-			$scope.status = 'Sale inserted successfully';
-		})
-		.error(function (error) {
-			$scope.status = 'Unable to insert sale: ' + error.message;
-			alert($scope.status);
+		.then(function () {
+			
+		},
+		function (response) {
+			
 		});
-		alert($scope.status);
+
+		updatePrices();
+		updateNames();
 	}
 
 	$scope.editSale = function (index) {
@@ -188,12 +182,11 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 			databaseData.putData("sales", data, "TransactionID", $scope.sales[$scope.arrayIndex].TransactionID)
 			.then(function () {
-				$scope.status = 'Updated sale!';
-			})
-			.error(function (data, status, header, config) {
-				$scope.status = 'Unable to update sale: ' + status;
+				
+			},
+			function (response) {
+				
 			});
-			alert($scope.status);
 			
 			$scope.sales[$scope.arrayIndex].ItemID = $scope.productID;
 			$scope.sales[$scope.arrayIndex].Date = $scope.productDate.getTime();
