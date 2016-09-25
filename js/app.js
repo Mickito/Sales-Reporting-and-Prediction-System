@@ -28,9 +28,9 @@ app.factory('databaseData',['$http', function ($http){
 				return $http.post('data/database_connection.php/' + table, data);
 			};
 
-			databaseData.putData = function(table, data, id){
+			databaseData.putData = function(table, data, column, id){
 				alert('attempting to put');
-				return $http.put('data/database_connection.php/' + table + "/ItemID/" + id, data);
+				return $http.put('data/database_connection.php/' + table + "/" + column + "/" + id, data);
 			};
 	
 			return databaseData;
@@ -83,7 +83,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 		alert($scope.itemID);
 		
-		databaseData.putData("item", data, $scope.itemID)
+		databaseData.putData("item", data, "ItemID",$scope.itemID)
 		.then(function () {
 			$scope.status = 'Updated items!';
 			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
@@ -117,7 +117,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	}
 
 	getSales();
-
+	
 	$scope.onSubmit = function () {
 		sale = {};
 		sale.ItemID = $scope.productID;
@@ -151,7 +151,18 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	
 	$scope.onUpdate = function() {
 		if ($scope.editing) {
-			$scope.sales[$scope.arrayIndex].Name = $scope.productName;
+			var data = JSON.stringify({ItemID: $scope.productID, Date: $scope.productDate.getTime(), Quantity: $scope.productSold});
+
+			databaseData.putData("sales", data, "TransactionID", $scope.transactionID)
+			.then(function () {
+				$scope.status = 'Updated sale!';
+			})
+			.error(function (data, status, header, config) {
+				$scope.status = 'Unable to update sale: ' + status;
+			});
+			alert($scope.status);
+			
+			$scope.sales[$scope.arrayIndex].ItemID = $scope.productID;
 			$scope.sales[$scope.arrayIndex].Price = $scope.productPrice;
 			$scope.sales[$scope.arrayIndex].Date = $scope.productDate.getTime();
 			$scope.sales[$scope.arrayIndex].Quantity = $scope.productSold;
@@ -160,7 +171,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	$scope.onReset = function () {
 		$scope.editing = false;
-		$scope.productName = "";
+		$scope.productID = "";
 		$scope.productPrice = "";
 		$scope.productDate = "";
 		$scope.productSold = "";
