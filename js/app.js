@@ -118,10 +118,44 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	getSales();
 	
+	// Get items so we can reference them
+	$scope.items = [];
+	function getItem() {
+		databaseData.getData("item")
+			.then(function (response) {
+				$scope.items = response.data;
+			})
+	}
+	getItem();
+	
+	function updatePrices() {
+		for (var i = 0; i < $scope.sales.length; i++) {
+			var id = $scope.sales[i].ItemID;
+			for (var j = 0; j < $scope.items.length; j++) {
+				 if ($scope.items[j].ItemID == id) {
+					 $scope.sales[i].Price = $scope.sales[i].Quantity * $scope.items[j].Price;
+					 break;
+				 }
+			}
+		}
+	}
+	updatePrices();
+	function updateNames() {
+		for (var i = 0; i < $scope.sales.length; i++) {
+			var id = $scope.sales[i].ItemID;
+			for (var j = 0; j < $scope.items.length; j++) {
+				 if ($scope.items[j].ItemID == id) {
+					 $scope.sales[i].ItemName = $scope.items[j].Name;
+					 break;
+				 }
+			}
+		}
+	}
+	updateNames();
+	
 	$scope.onSubmit = function () {
 		sale = {};
 		sale.ItemID = $scope.productID;
-		sale.Price = $scope.productPrice;
 		sale.Date = $scope.productDate.getTime();
 		sale.Quantity = $scope.productSold;
 		$scope.sales.push(sale);
@@ -143,7 +177,6 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		$scope.editing = true;
 		$scope.arrayIndex = index;
 		$scope.productID = parseInt($scope.sales[index].ItemID);
-		$scope.productPrice = parseInt($scope.sales[index].Price);
 		$scope.productSold = parseInt($scope.sales[index].Quantity);
 		var convertToDate = new Date($scope.sales[index].Date);
 		$scope.productDate = convertToDate;
@@ -163,16 +196,16 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 			alert($scope.status);
 			
 			$scope.sales[$scope.arrayIndex].ItemID = $scope.productID;
-			$scope.sales[$scope.arrayIndex].Price = $scope.productPrice;
 			$scope.sales[$scope.arrayIndex].Date = $scope.productDate.getTime();
 			$scope.sales[$scope.arrayIndex].Quantity = $scope.productSold;
+			updatePrices();
+			updateNames();
 		}
 	}
 
 	$scope.onReset = function () {
 		$scope.editing = false;
 		$scope.productID = "";
-		$scope.productPrice = "";
 		$scope.productDate = "";
 		$scope.productSold = "";
 	}
