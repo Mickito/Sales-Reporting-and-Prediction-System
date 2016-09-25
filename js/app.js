@@ -83,7 +83,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		var data = JSON.stringify({Name: $scope.itemName, Price: $scope.itemPrice, StockQty: $scope.itemQuantity});
 		alert($scope.itemID);
 		
-		databaseData.putData("item", data, "ItemID",$scope.itemID)
+		databaseData.putData("item", data, "ItemID", $scope.itemID)
 		.then(function () {
 			$scope.status = 'Updated items!';
 			$scope.items[$scope.arrayIndex].Name = $scope.itemName;
@@ -153,7 +153,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		if ($scope.editing) {
 			var data = JSON.stringify({ItemID: $scope.productID, Date: $scope.productDate.getTime(), Quantity: $scope.productSold});
 
-			databaseData.putData("sales", data, "TransactionID", $scope.transactionID)
+			databaseData.putData("sales", data, "TransactionID", $scope.sales[$scope.arrayIndex].TransactionID)
 			.then(function () {
 				$scope.status = 'Updated sale!';
 			})
