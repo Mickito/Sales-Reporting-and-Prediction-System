@@ -1,45 +1,47 @@
-<div class="col-xs-12">
-    <fieldset>
-        <form name="itemForm">
-            <h1>Items</h1>
-            <p>
-                <label for="productName">Product Name:</label>
-                <input type="text" id="productName" placeholder="Name of item" data-ng-model="itemName" required="true" />
-                <label for="price">Price ($):</label>
-                <input type="number" id="price" placeholder="$0.00" data-ng-model="itemPrice" required="true" />
-                <label for="quantity">Quantity:</label> 
-                <input type="number" id="quantity" placeholder="" data-ng-model="itemQuantity" required="true" />
-            </p>
-            <p>
-                <button type="button" data-ng-disabled="itemForm.$invalid" class="btn btn-primary" data-ng-click="onSubmit()" data-ng-hide="isEdit == true" >Submit Product</button>
-                <button type="button" class="btn btn-danger" data-ng-click="onReset()">Clear Form</button>
-            </p>
-            <p>
-                <button type="button" class="btn btn-primary" data-ng-click="onUpdate()" data-ng-show="isEdit == true">Update</button>
-            </p>
-        </form>
-    </fieldset>
+<div class="row">
+	<div class="col-xs-12">
+		<fieldset>
+			<form name="itemForm">
+				<h1>Items</h1>
+				<p>
+					<label for="productName">Product Name:</label>
+					<input type="text" id="productName" placeholder="Name of item" data-ng-model="itemName" required="true" />
+					<label for="price">Price ($):</label>
+					<input type="number" id="price" placeholder="$0.00" data-ng-model="itemPrice" required="true" />
+					<label for="quantity">Quantity:</label> 
+					<input type="number" id="quantity" placeholder="" data-ng-model="itemQuantity" required="true" />
+				</p>
+				<p>
+					<button type="button" data-ng-disabled="itemForm.$invalid" class="btn btn-primary" data-ng-click="onSubmit()" data-ng-hide="isEdit == true" >Submit Product</button>
+					<button type="button" class="btn btn-danger" data-ng-click="onReset()">Clear Form</button>
+				</p>
+				<p>
+					<button type="button" class="btn btn-primary" data-ng-click="onUpdate()" data-ng-show="isEdit == true">Update</button>
+				</p>
+			</form>
+		</fieldset>
+	</div>
 </div>
 <div class="row">
-    <div class="col-xs-12">
-        <div class="table-responsive">
-            <table class="table table-striped tabel-hover">
-            <thead>
-                <th class="col-md-6" id="tableName">Name</th>
-                <th class="col-md-2" id="tablePrice">Price</th>
-                <th class="col-md-2" id="tableQuantity">Quantity</th>
-                <th class="col-md-2" id="tableDescription">Description</th>
-                <th class="col-md-2" id="tableEdit">Edit</th>
-            </thead>
-            <tbody>
-                <tr data-ng-repeat="item in items">
-                    <td headers="tableName">{{item.Name}}</td>
-                    <td headers="tablePrice">{{item.Price | currency}}</td>
-                    <td headers="tableQuantity">{{item.StockQty}}</td>
-                    <td headers="tableDescription">{{item.ItemID}}</td>
-                    <td headers="tableEdit"><button class="btn btn-default" data-ng-click="editItem($index)">Edit</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+	<div class="col-xs-12">
+		<div class="table-responsive">
+			<table class="table table-striped tabel-hover">
+			<thead>
+				<th class="col-md-6" id="tableName">Name</th>
+				<th class="col-md-2" id="tablePrice">Price</th>
+				<th class="col-md-2" id="tableQuantity">Quantity</th>
+				<th class="col-md-2" id="tableDescription">Description</th>
+				<th class="col-md-2" id="tableEdit">Edit</th>
+			</thead>
+			<tbody>
+				<tr data-ng-repeat="item in items">
+					<td headers="tableName">{{item.Name}}</td>
+					<td headers="tablePrice">{{item.Price | currency}}</td>
+					<td headers="tableQuantity">{{item.StockQty}}</td>
+					<td headers="tableDescription">{{item.ItemID}}</td>
+					<td headers="tableEdit"><button class="btn btn-default" data-ng-click="editItem($index)">Edit</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>

@@ -1,0 +1,22 @@
+<div class="row">
+	<div class="col-xs-12">
+		<h1>Analysis</h1>
+		<p>Select an item to display its average sales per month</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-5 col-sm-8 col-xs-12">
+		<div class="form-group">
+			<label for="selectedItem">Item:</label>
+			<select id="selectedItem" class="form-control" data-ng-model="selectedItemName" data-ng-change="onSelectedItemChange()">
+				<option data-ng-repeat="item in items">{{item.Name}}</option>
+			</select>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-12">
+		<p>Average quantity sold per month: <span>{{selectedItem.avgQuantity}}</span></p>
+		<p>Average revenue per month: <span>{{selectedItem.avgRevenue}}</span></p>
+	</div>
+</div>

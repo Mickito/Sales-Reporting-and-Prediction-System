@@ -10,9 +10,13 @@ app.config(['$routeProvider', function ($routeProvider) {
 			templateUrl: "templates/Sales.html"
 			, controller: "saleCtrl"
 		})
-		.when('/Stock', {
-			templateUrl: "templates/Items.html"
-			, controller: "itemsCtrl"
+		.when('/Analysis', {
+			templateUrl: "templates/Analysis.html"
+			, controller: "analysisCtrl"
+		})
+		.when('/Sales', {
+			templateUrl: "templates/Sales.html"
+			, controller: "saleCtrl"
 		});
 }]);
 
@@ -172,7 +176,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		$scope.arrayIndex = index;
 		$scope.productID = parseInt($scope.sales[index].ItemID);
 		$scope.productSold = parseInt($scope.sales[index].Quantity);
-		var convertToDate = new Date($scope.sales[index].Date);
+		var convertToDate = new Date(parseInt($scope.sales[index].Date));
 		$scope.productDate = convertToDate;
 	}
 	
@@ -202,4 +206,80 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		$scope.productDate = "";
 		$scope.productSold = "";
 	}
+});
+
+app.controller('analysisCtrl', function ($scope, databaseData) {
+	sales = [];
+	$scope.items = [];
+	
+	function getSales() {
+		databaseData.getData("sales")
+		.then(function (response) {
+			sales = response.data;
+			calculateAverageSales();
+		})
+	}
+
+	function getItem() {
+		databaseData.getData("item")
+			.then(function (response) {
+				$scope.items = response.data;
+				$scope.selectedItemName = $scope.items[0].Name;
+				$scope.onSelectedItemChange();
+				getSales();
+			})
+	}
+	
+	$scope.onSelectedItemChange = function() {
+		console.log($scope.selectedItemName);
+		for (var i = 0; i < $scope.items.length; i++) {
+			if ($scope.selectedItemName == $scope.items[i].Name) {
+				$scope.selectedItem = $scope.items[i];
+				break;
+			}
+		}
+	}
+
+	getItem();
+	
+	function calculateAverageSales() {
+		for (var i = 0; i < $scope.items.length; i++) {
+			var monthlySales = {};
+			var id = $scope.items[i].ItemID;
+						
+			// Get each sale and separate into month/year
+			for (var j = 0; j < sales.length; j++) {
+				if (id == sales[j].ItemID) {
+					// Get key
+					var date = new Date(parseInt(sales[j].Date));
+					var monthYear = date.getMonth() + "" + date.getFullYear();
+					if (monthlySales[monthYear] == null) {
+						monthlySales[monthYear] = [];
+					}
+					monthlySales[monthYear].push(sales[j].Quantity);
+				}
+			}
+			
+			// Total up the sales for each month
+			var totalQuantities = [];
+			for (key in monthlySales) {
+				console.log("key: " + key);
+				var totalQuantity = 0;
+				for (var k = 0; k < monthlySales[key].length; k++) {
+					totalQuantity +=  parseInt(monthlySales[key][k]);
+				}
+				totalQuantities.push(totalQuantity);
+			}
+			
+			// Calculate the average from each total
+			var avg = 0;
+			for (var l = 0; l < totalQuantities.length; l++) {
+				avg += parseInt(totalQuantities[l]);
+			}
+			avg /= totalQuantities.length;
+			$scope.items[i].avgQuantity = avg;
+			$scope.items[i].avgRevenue = avg * $scope.items[i].Price;
+		}
+	}
+
 });
