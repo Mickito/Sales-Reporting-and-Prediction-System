@@ -16,6 +16,7 @@ app.config(['$routeProvider', function ($routeProvider) {
 		})
 		.when('/Report', {
 			templateUrl: "templates/Report.html"
+			, controller: "reportCtl"
 		})
 		.when('/Stock', {
 			templateUrl: "templates/Items.html"
@@ -284,5 +285,14 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 			$scope.items[i].avgRevenue = avg * $scope.items[i].Price;
 		}
 	}
+});
 
+app.controller('reportCtl', function ($scope) {
+	$scope.values = ["Temp","Till","Month","is","semi","implemented",":D"];
+	$scope.startWeek = 0;
+	$scope.endWeek = $scope.values[$scope.startWeek];
+	
+	$scope.onClick = function () {
+		$scope.endWeek = $scope.values[$scope.startWeek];
+		};
 });

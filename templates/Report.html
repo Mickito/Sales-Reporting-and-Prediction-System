@@ -1,9 +1,19 @@
 <div class="col-md-12">
 	<fieldset>
+		<form name="reportForm">
 		<h1>Report Page Form</h1>
+		<p>
+			<label for="weekStart">Week Start By:</label>
+			<select class="selectpicker" data-ng-model="startWeek" ng-options="values.indexOf(startWeek) as startWeek for startWeek in values"  data-ng-click="onClick()">
+				{{startWeek}}
+			</select>
+			<label for="weekEnd">Week End By:</label>
+			<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled"/>
+		</p>
+		</form>
 	</fieldset>
-	</div>
-	<div class="row">
+</div>
+<div class="row">
 	<div class="col-md-12">
 	</div>
 </div>
