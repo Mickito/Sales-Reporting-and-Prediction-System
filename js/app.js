@@ -10,6 +10,9 @@ app.config(['$routeProvider', function ($routeProvider) {
 			templateUrl: "templates/Sales.html"
 			, controller: "saleCtrl"
 		})
+		.when('/Report', {
+			templateUrl: "templates/Report.html"
+		})
 		.when('/Stock', {
 			templateUrl: "templates/Items.html"
 			, controller: "itemsCtrl"
