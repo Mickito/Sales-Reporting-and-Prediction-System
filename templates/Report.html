@@ -2,14 +2,51 @@
 	<fieldset>
 		<form name="reportForm">
 		<h1>Report Page Form</h1>
-		<p>
-			<label for="weekStart">Week Start By:</label>
-			<select class="selectpicker" data-ng-model="startWeek" ng-options="values.indexOf(startWeek) as startWeek for startWeek in values"  data-ng-click="onClick()">
-				{{startWeek}}
-			</select>
-			<label for="weekEnd">Week End By:</label>
-			<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled"/>
-		</p>
+			<p>
+				<label for="weekStart">Week Start By:</label>
+				<select class="selectpicker" data-ng-model="startWeek" ng-options="values.indexOf(startWeek) as startWeek for startWeek in values"  data-ng-click="onClick()">
+					{{startWeek}}
+				</select>
+				<label for="weekEnd">Week End By:</label>
+				<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled"/>
+			</p>
+		    <p>
+				<label for="month">Select Months: </label>
+				<select data-ng-change="getMonth()" name="month=" id="month" data-ng-model="selectedMonth" ng-options="m as m.name for m in months">
+					
+				</select>
+			</p>
+			<p>
+				<label for="year">Select Year: </label>
+				<select data-ng-change="getYear()" name="year=" id="year" data-ng-model="selectedYear" ng-options="y as y for y in years">
+				</select>
+			</p>
+			
+			<!--Generate Table -->
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-responsive">
+						<table class="table table-striped tabel-hover">
+							<thead>
+								<tr>
+									<th class="col-md-4" id="pdtName">Product Name</th>
+									<th class="col-md-2" id="pchdDate">Purchased Date</th>
+									<th class="col-md-2" id="qnttySold">Quantity Sold</th>
+									<th class="col-md-1" id="Tprice">Total Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr data-ng-repeat="sale in sales">
+									<td headers="pdtName">{{sale.ItemName}}</td>
+									<td headers="pchdDate">{{sale.Date | date : format : mediumDate}}</td>
+									<td headers="qnttySold">{{sale.Quantity}}</td>
+									<td headers="Tprice">{{sale.Price | currency}}</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</form>
 	</fieldset>
 </div>

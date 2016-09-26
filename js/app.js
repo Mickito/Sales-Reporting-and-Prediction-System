@@ -295,4 +295,28 @@ app.controller('reportCtl', function ($scope) {
 	$scope.onClick = function () {
 		$scope.endWeek = $scope.values[$scope.startWeek];
 		};
+	
+	$scope.month = 0;
+	$scope.year = 0;
+	
+	$scope.months = [
+						{name: "January", value: 1},{name: "February", value: 2},{name: "March", value: 3},
+					 	{name: "April", value: 4},{name: "May", value: 5},{name: "June", value: 6},{name: "July", value: 7},
+						{name: "August", value: 8},{name: "September", value: 9},{name: "October", value: 10},
+						{name: "November", value: 11},{name: "December", value: 12}
+	];
+	
+	$scope.years = ["This Year", "Last Year", "2Years Ago"];
+	
+	$scope.getMonth	 = function()
+	{
+		$scope.month = $scope.selectedMonth.value;
+	}
+	$scope.getYear = function()
+	{
+		//TBA
+	}
+	
+	
+	
 });
