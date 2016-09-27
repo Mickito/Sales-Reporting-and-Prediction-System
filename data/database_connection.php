@@ -5,13 +5,21 @@ $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));
 $input = json_decode(file_get_contents('php://input'),true);
 
 // connect to the mysql database
-$conn = mysqli_connect('localhost', 'root', 'password', 'sreps');
+//$conn = mysqli_connect('localhost', 'root', 'password', 'sreps');
+$conn = mysqli_connect('mysql.ict.swin.edu.au', 's100590093', '280294', 's100590093_db');
 mysqli_set_charset($conn,'utf8');
  
 // retrieve the table, field name and key value from the path
 $table = preg_replace('/[^a-z0-9_]+/i','',array_shift($request));
 $fld = array_shift($request);
 $key = array_shift($request);
+$sort = array_shift($request);
+$seq = array_shift($request);
+
+if ($fld == 'NULL') $fld = '';
+if ($key == 'NULL') $key = '';
+if ($sort == 'NULL') $sort = '';
+if ($seq == 'NULL') $seq = ''; 
 
 // retrieve the data to prepare set values
 if (isset ($input))  {
@@ -31,7 +39,7 @@ if (isset ($input))  {
 // create SQL
 switch ($method) {
   case 'GET':
-    $sql = "select * from `$table`".($key?" WHERE $fld='$key'":''); break;
+    $sql = "select * from `$table`".($key?" WHERE $fld='$key'":'').($sort?" ORDER BY $sort".($seq?'':" DESC"):''); break;
   case 'PUT':
     $sql = "update `$table` set $set where ".($key?"$fld='$key'":"0=1"); break;
   case 'POST':

@@ -27,14 +27,14 @@
 		<div class="table-responsive">
 			<table class="table table-striped tabel-hover">
 			<thead>
-				<th class="col-md-6" id="tableName">Name</th>
-				<th class="col-md-2" id="tablePrice">Price</th>
-				<th class="col-md-2" id="tableQuantity">Quantity</th>
+				<th class="col-md-6" id="tableName"><a href="#/Stock" ng-click="sortField = 'Name'; sortReverse = !sortReverse">Name<span ng-show="sortField == 'Name' && !sortReverse" class="	glyphicon glyphicon-triangle-bottom"></span><span ng-show="sortField == 'Name' && sortReverse" class="glyphicon glyphicon-triangle-top"></span></a></th>
+				<th class="col-md-2" id="tablePrice"><a href="#/Stock"  ng-click="sortField = 'Price'; sortReverse = !sortReverse">Price<span ng-show="sortField == 'Price' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span><span ng-show="sortField == 'Price' && sortReverse" class="glyphicon glyphicon-triangle-top"></span></a></th>
+				<th class="col-md-2" id="tableQuantity"><a href="#/Stock" ng-click="sortField = 'StockQty'; sortReverse = !sortReverse">Quantity<span ng-show="sortField == 'StockQty' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span><span ng-show="sortField == 'StockQty' && sortReverse" class="glyphicon glyphicon-triangle-top"></span></a></th>
 				<th class="col-md-2" id="tableDescription">Description</th>
 				<th class="col-md-2" id="tableEdit">Edit</th>
 			</thead>
 			<tbody>
-				<tr data-ng-repeat="item in items">
+				<tr data-ng-repeat="item in items | orderBy:sortField:sortReverse">
 					<td headers="tableName">{{item.Name}}</td>
 					<td headers="tablePrice">{{item.Price | currency}}</td>
 					<td headers="tableQuantity">{{item.StockQty}}</td>
