@@ -21,19 +21,21 @@
 		</div>
 	<div class="row">
 		<div class="col-md-12">
+			<p>sortField: {{sortField}}</p>
+			<p>sortReverse: {{sortReverse}}</p>
 			<div class="table-responsive">
 				<table class="table table-striped tabel-hover">
 					<thead>
 						<tr>
-							<th class="col-md-4" id="pdtName">Product Name</th>
-							<th class="col-md-2" id="pchdDate">Purchased Date</th>
-							<th class="col-md-2" id="qnttySold">Quantity Sold</th>
-							<th class="col-md-1" id="Tprice">Total Price</th>
+							<th class="col-md-4" id="pdtName"><a href="#/Sales" ng-click="sortField = 'ItemName'; sortReverse = !sortReverse">Product Name<span ng-show="sortField == 'ItemName' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span><span ng-show="sortField == 'ItemName' && sortReverse" class="glyphicon glyphicon-triangle-top"></span></a></th>
+							<th class="col-md-2" id="pchdDate"><a href="#/Sales" ng-click="sortField = 'Date'; sortReverse = !sortReverse">Purchased Date<span ng-show="sortField == 'Date' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span><span ng-show="sortField == 'Date' && sortReverse" class="glyphicon glyphicon-triangle-top"></span></a></th>
+							<th class="col-md-2" id="qnttySold"><a href="#/Sales" ng-click="sortField = 'Quantity'; sortReverse = !sortReverse">Quantity Sold<span ng-show="sortField == 'Quantity' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span><span ng-show="sortField == 'Quantity' && sortReverse" class="glyphicon glyphicon-triangle-top"></span></a></th>
+							<th class="col-md-1" id="Tprice"><a href="#/Sales" ng-click="sortField = 'Price'; sortReverse = !sortReverse">Total Price<span ng-show="sortField == 'Price' && !sortReverse" class="glyphicon glyphicon-triangle-bottom"></span><span ng-show="sortField == 'Price' && sortReverse" class="glyphicon glyphicon-triangle-top"></span></a></th>
 							<th class="col-md-1" id="edit">Edit</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr data-ng-repeat="sale in sales">
+						<tr data-ng-repeat="sale in sales | OrderBy:'ItemID':true">
 							<td headers="pdtName">{{sale.ItemName}}</td>
 							<td headers="pchdDate">{{sale.Date | date : format : mediumDate}}</td>
 							<td headers="qnttySold">{{sale.Quantity}}</td>

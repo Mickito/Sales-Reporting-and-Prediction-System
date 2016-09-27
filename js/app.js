@@ -31,6 +31,10 @@ app.factory('databaseData',['$http', function ($http){
 				return $http.get('data/database_connection.php/' + table);
 			};
 
+			databaseData.getFilterData = function(table, field, key, sort, sequence){
+				return $http.get('data/database_connection.php/' + table + '/' + field + '/' + key + '/' + sort + '/' + ((sequence==false)?'TRUE':''));
+			};
+
 			databaseData.postData = function(table, data){
 				return $http.post('data/database_connection.php/' + table, data);
 			};
@@ -46,6 +50,9 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
+
+	$scope.sortField = 'Name';
+	$scope.sortReverse = false;
 
 	function getItem() {
 		databaseData.getData("item")
@@ -101,6 +108,9 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		$scope.itemName = "";
 		$scope.itemPrice = "";
 		$scope.itemQuantity = "";
+
+		$scope.filterField = 'NULL';
+		$scope.filterKey = 'NULL';
 	}
 });
 
@@ -108,6 +118,9 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.sales = [];
 	$scope.editing = false;
 	$scope.arrayIndex = -1;
+
+	$scope.sortField = 'ItemID';
+	$scope.sortReverse = false;
 	
 	function updatePrices() {
 		for (var i = 0; i < $scope.sales.length; i++) {
