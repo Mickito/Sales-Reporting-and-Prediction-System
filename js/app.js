@@ -31,10 +31,6 @@ app.factory('databaseData',['$http', function ($http){
 				return $http.get('data/database_connection.php/' + table);
 			};
 
-			databaseData.getFilterData = function(table, field, key, sort, sequence){
-				return $http.get('data/database_connection.php/' + table + '/' + field + '/' + key + '/' + sort + '/' + ((sequence==false)?'TRUE':''));
-			};
-
 			databaseData.postData = function(table, data){
 				return $http.post('data/database_connection.php/' + table, data);
 			};
@@ -50,9 +46,6 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
-
-	$scope.sortField = 'Name';
-	$scope.sortReverse = false;
 
 	function getItem() {
 		databaseData.getData("item")
@@ -108,9 +101,6 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		$scope.itemName = "";
 		$scope.itemPrice = "";
 		$scope.itemQuantity = "";
-
-		$scope.filterField = 'NULL';
-		$scope.filterKey = 'NULL';
 	}
 });
 
@@ -118,9 +108,6 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.sales = [];
 	$scope.editing = false;
 	$scope.arrayIndex = -1;
-
-	$scope.sortField = 'ItemID';
-	$scope.sortReverse = false;
 	
 	function updatePrices() {
 		for (var i = 0; i < $scope.sales.length; i++) {
@@ -300,7 +287,10 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 	}
 });
 
-app.controller('reportCtl', function ($scope) {
+app.controller('reportCtl', function ($scope, databaseData) {
+	$scope.items = [];
+	$scope.sales = [];
+	$scope.sales2 = [];
 	$scope.values = ["Temp","Till","Month","is","semi","implemented",":D"];
 	$scope.startWeek = 0;
 	$scope.endWeek = $scope.values[$scope.startWeek];
@@ -309,7 +299,7 @@ app.controller('reportCtl', function ($scope) {
 		$scope.endWeek = $scope.values[$scope.startWeek];
 		};
 	
-	$scope.month = 0;
+	$scope.month = "";
 	$scope.year = 0;
 	
 	$scope.months = [
@@ -321,15 +311,91 @@ app.controller('reportCtl', function ($scope) {
 	
 	$scope.years = ["This Year", "Last Year", "2Years Ago"];
 	
+	//Set the Month based on dropdown box
 	$scope.getMonth	 = function()
 	{
-		$scope.month = $scope.selectedMonth.value;
+		$scope.month = $scope.selectedMonth.name;
 	}
+	//Set the year based on dropdown box
 	$scope.getYear = function()
 	{
-		//TBA
+		if ($scope.selectedYear == "This Year")
+			$scope.year = new Date().getFullYear();
+		else if ($scope.selectedYear == "Last Year")
+			$scope.year = new Date().getFullYear() - 1;
+		else
+			$scope.year = new Date().getFullYear() - 2;
+		
+		$scope.year = $scope.year.toString();
 	}
 	
+	function getSales() {
+		databaseData.getData("sales")
+		.then(function (response) {
+			$scope.sales = response.data;
+		})
+	}
 	
+
+	function getItem() {
+		databaseData.getData("item")
+			.then(function (response) {
+				$scope.items = response.data;
+				updateNames();
+				updatePrices();
+			})
+	}
+	
+	function updatePrices() {
+		for (var i = 0; i < $scope.sales.length; i++) {
+			var id = $scope.sales[i].ItemID;
+			for (var j = 0; j < $scope.items.length; j++) {
+				 if ($scope.items[j].ItemID == id) {
+					 $scope.sales[i].Price = $scope.sales[i].Quantity * $scope.items[j].Price;
+					 break;
+				 }
+			}
+		}
+	}
+
+	function updateNames() {
+		for (var i = 0; i < $scope.sales.length; i++) {
+			var id = $scope.sales[i].ItemID;
+			for (var j = 0; j < $scope.items.length; j++) {
+				 if ($scope.items[j].ItemID == id) {
+					 $scope.sales[i].ItemName = $scope.items[j].Name;
+					 break;
+				 }
+			}
+		}
+	}
+		
+	
+	$scope.generateTable = function()
+	{
+		getSales();
+		getItem();
+		
+		var tempDate = new Date() 
+		
+		var date = new Date($scope.year + "," + $scope.month);
+		var timeStamp ="";
+		var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+		var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+		$scope.sales2 = $scope.sales;
+		for(var i = 0; i < $scope.sales2.length; i++) 
+				{
+					timeStamp = $scope.sales2[i].Date;
+					tempDate = new Date(timeStamp * 1);
+					// if outside range
+					if(tempDate < firstDay || tempDate > lastDay) 
+					{
+						$scope.sales2.splice(i, 1);
+						i--;
+					}
+				}
+		
+
+	}
 	
 });
