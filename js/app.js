@@ -291,19 +291,23 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.sales = [];
 	$scope.sales2 = [];
-	$scope.values = ["Temp","Till","Month","is","semi","implemented",":D"];
 	$scope.startWeek = 0;
-	$scope.endWeek = $scope.values[$scope.startWeek];
+	$scope.endWeek = 0;
 	
-	$scope.onClick = function () {
-		$scope.endWeek = $scope.values[$scope.startWeek];
+	$("[name='my-checkbox']").bootstrapSwitch();
+	$('.datepicker').datepicker();
+	
+	$scope.getWeek = function () {
+		$scope.startWeek = $scope.selectedWeek.days;
+		$scope.endWeek = $scope.startWeek + 7;
 		};
+	
 	
 	$scope.month = "";
 	$scope.year = 0;
 	
 	$scope.months = [
-						{name: "January", value: 1},{name: "February", value: 2},{name: "March", value: 3},
+						{name: "January", value: 1, days: 22},{name: "February", value: 2, days: 22},{name: "March", value: 3, days: 22},
 					 	{name: "April", value: 4},{name: "May", value: 5},{name: "June", value: 6},{name: "July", value: 7},
 						{name: "August", value: 8},{name: "September", value: 9},{name: "October", value: 10},
 						{name: "November", value: 11},{name: "December", value: 12}

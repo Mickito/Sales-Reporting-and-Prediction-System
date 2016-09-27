@@ -1,30 +1,26 @@
 <div class="col-md-12">
 	<fieldset>
 		<form name="reportForm">
-		<h1>Report Page Form</h1>
+			<h1>Report Page Form</h1>
 			<p>
 				<label for="weekStart">Week Start By:</label>
-				<select class="selectpicker" data-ng-model="startWeek" ng-options="values.indexOf(startWeek) as startWeek for startWeek in values"  data-ng-click="onClick()">
-					{{startWeek}}
-				</select>
+				<input data-provide="datepicker">
 				<label for="weekEnd">Week End By:</label>
-				<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled"/>
-			</p>
-		    <p>
-				<label for="month">Select Months: </label>
-				<select data-ng-change="getMonth()" name="month=" id="month" data-ng-model="selectedMonth" ng-options="m as m.name for m in months">
-					
-				</select>
+				<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled" />
 			</p>
 			<p>
+				<label for="month">Select Month: </label>
+				<select data-ng-change="getMonth()" name="month=" id="month" data-ng-model="selectedMonth" ng-options="m as m.name for m in months">
+				</select>
 				<label for="year">Select Year: </label>
 				<select data-ng-change="getYear()" name="year=" id="year" data-ng-model="selectedYear" ng-options="y as y for y in years">
 				</select>
 			</p>
 			<p>
 				<input type="button" class="btn btn-primary" value="Generate Table" data-ng-click="generateTable()">
+				<input type="checkbox" name="my-checkbox" checked>
 			</p>
-			
+
 			<!--Generate Table -->
 			<div class="row">
 				<div class="col-md-12">
