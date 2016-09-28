@@ -310,10 +310,28 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.sales2 = [];
 	$scope.startWeek = 0;
 	$scope.endWeek = 0;
-	$scope.onOff = false;
+	$scope.onOff = true;
+	
+	Date.prototype.addDays = function(days)
+	{
+		var date = new Date(this.valueOf());
+		date.setDate(date.getDate() + days);
+		return date;
+	}
+	
 	$("[name='pushtoggle']").bootstrapSwitch();
 	$('.datepicker').datepicker();
-
+	
+	 $('#apple').datepicker().on('changeDate', function(e){ 
+		$scope.$apply(function(){
+			alert(e.date);
+			$scope.startWeek = new Date(e.date);
+			var temp = new Date(e.date).addDays(7);
+			$scope.endWeek = (temp.getDate() + '/' + (temp.getMonth() + 1) + '/' + temp.getYear());
+		 })
+	 });
+	
+	
 	$('input[name="pushtoggle"]').on('switchChange.bootstrapSwitch', function(event, state) {
 		$scope.$apply(function(){
 		$scope.onOff = state;
@@ -335,15 +353,12 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		{
 			name: "January"
 			, value: 1
-			, days: 22
 		}, {
 			name: "February"
 			, value: 2
-			, days: 22
 		}, {
 			name: "March"
 			, value: 3
-			, days: 22
 		}
 		, {
 			name: "April"
@@ -437,23 +452,53 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	}
 
 	$scope.generateTable = function () {
-		alert($scope.onOff);
 		getSales();
-		getItem();
-		var tempDate = new Date()
-		var date = new Date($scope.year + "," + $scope.month);
-		var timeStamp = "";
-		var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-		var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+ 		getItem();
+		
 		$scope.sales2 = $scope.sales;
-		for (var i = 0; i < $scope.sales2.length; i++) {
-			timeStamp = $scope.sales2[i].Date;
-			tempDate = new Date(timeStamp * 1);
-			// if outside range
-			if (tempDate < firstDay || tempDate > lastDay) {
-				$scope.sales2.splice(i, 1);
-				i--;
-			}
+		alert($scope.sales2.length);
+		
+		
+ 		if ($scope.onOff == true)
+		{
+		var tempDate = new Date() 
+ 		
+ 		var date = new Date($scope.year + "," + $scope.month);
+ 		var timeStamp ="";
+ 		var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+ 		var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+ 		for(var i = 0; i < $scope.sales2.length; i++) 
+ 				{
+ 					timeStamp = $scope.sales2[i].Date;
+ 					tempDate = new Date(timeStamp * 1);
+					alert(tempDate);
+ 					// if outside range
+ 					if(tempDate < firstDay || tempDate > lastDay) 
+ 					{
+ 						$scope.sales2.splice(i, 1);
+ 						i--;
+ 					}
+ 				}
+		}
+		else if ($scope.onOff == false)
+		{
+			var tempWeek = new Date();
+			var timestampWeek = "";
+			var start = $scope.startWeek;
+			alert($scope.sales2.length);
+			for (var i = 0; i < $scope.sales2.length; i++)
+				{
+					timestampWeek = $scope.sale2[i].Date;
+					alert(timestampWeek);
+					
+					tempWeek = new Date(timestampWeek * 1);
+					
+					if (tempWeek < $scope.startWeek || tempWeek > $scope.startWeek.addDays(7))
+					{
+						$scope.sales2.splice(i, 1);
+						i--;
+					}
+				}
 		}
 	}
 

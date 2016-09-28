@@ -4,7 +4,7 @@
 			<h1>Report Page Form</h1>
 			<p>
 				<label for="weekStart" ng-show="!onOff">Week Start By:</label>
-				<input data-provide="datepicker" ng-show="!onOff">
+				<input data-provide="datepicker" data-date-format="dd/mm/yyyy" ng-show="!onOff" id="apple">
 				<label for="weekEnd" ng-show="!onOff">Week End By:</label>
 				<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled" ng-show="!onOff"/>
 			</p>
@@ -18,7 +18,7 @@
 			</p>
 			<p>
 				<input type="button" class="btn btn-primary" value="Generate Table" data-ng-click="generateTable()">
-				<input type="checkbox" name="pushtoggle" data-ng-change="toggleWeather()" checked>
+				<input type="checkbox" name="pushtoggle" checked>
 			</p>
 
 			<!--Generate Table -->
