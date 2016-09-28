@@ -312,13 +312,15 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.endWeek = 0;
 	$scope.onOff = true;
 	
+	// prototype allows you to .addDays to date
 	Date.prototype.addDays = function(days)
 	{
 		var date = new Date(this.valueOf());
 		date.setDate(date.getDate() + days);
 		return date;
 	}
-	
+
+	// jquery code for toggle switch and date picker
 	$("[name='pushtoggle']").bootstrapSwitch();
 
 	$('.datepicker').datepicker();
@@ -331,15 +333,13 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		 })
 	 });
 	
-	
+	// Note Toggle ON = Month, Toggle OFF = Week
 	$('input[name="pushtoggle"]').on('switchChange.bootstrapSwitch', function(event, state) {
 		$scope.$apply(function(){
 		$scope.onOff = state;
 		})
 	});
 	
-	
-
 	$scope.getWeek = function () {
 		$scope.startWeek = $scope.selectedWeek.days;
 		$scope.endWeek = $scope.startWeek + 7;
