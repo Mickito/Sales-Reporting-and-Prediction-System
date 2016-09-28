@@ -3,22 +3,22 @@
 		<form name="reportForm">
 			<h1>Report Page Form</h1>
 			<p>
-				<label for="weekStart">Week Start By:</label>
-				<input data-provide="datepicker">
-				<label for="weekEnd">Week End By:</label>
-				<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled" />
+				<label for="weekStart" ng-show="!onOff">Week Start By:</label>
+				<input data-provide="datepicker" ng-show="!onOff">
+				<label for="weekEnd" ng-show="!onOff">Week End By:</label>
+				<input type="text" id="weekEnd" data-ng-model="endWeek" disabled="disabled" ng-show="!onOff"/>
 			</p>
 			<p>
-				<label for="month">Select Month: </label>
-				<select data-ng-change="getMonth()" name="month=" id="month" data-ng-model="selectedMonth" ng-options="m as m.name for m in months">
+				<label for="month"  ng-show="onOff">Select Month: </label>
+				<select data-ng-change="getMonth()" name="month=" id="month" data-ng-model="selectedMonth" ng-options="m as m.name for m in months" ng-show="onOff">
 				</select>
-				<label for="year">Select Year: </label>
-				<select data-ng-change="getYear()" name="year=" id="year" data-ng-model="selectedYear" ng-options="y as y for y in years">
+				<label for="year"  ng-show="onOff">Select Year: </label>
+				<select data-ng-change="getYear()" name="year=" id="year" data-ng-model="selectedYear" ng-options="y as y for y in years" ng-show="onOff">
 				</select>
 			</p>
 			<p>
 				<input type="button" class="btn btn-primary" value="Generate Table" data-ng-click="generateTable()">
-				<input type="checkbox" name="my-checkbox" checked>
+				<input type="checkbox" name="pushtoggle" data-ng-change="toggleWeather()" checked>
 			</p>
 
 			<!--Generate Table -->
