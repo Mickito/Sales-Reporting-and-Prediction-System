@@ -320,11 +320,11 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	}
 	
 	$("[name='pushtoggle']").bootstrapSwitch();
+
 	$('.datepicker').datepicker();
-	
+
 	 $('#apple').datepicker().on('changeDate', function(e){ 
 		$scope.$apply(function(){
-			alert(e.date);
 			$scope.startWeek = new Date(e.date);
 			var temp = new Date(e.date).addDays(7);
 			$scope.endWeek = (temp.getDate() + '/' + (temp.getMonth() + 1) + '/' + temp.getYear());
@@ -343,56 +343,14 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.getWeek = function () {
 		$scope.startWeek = $scope.selectedWeek.days;
 		$scope.endWeek = $scope.startWeek + 7;
-	};
-
-
-	$scope.month = "";
-	$scope.year = 0;
 
 	$scope.months = [
-		{
-			name: "January"
-			, value: 1
-		}, {
-			name: "February"
-			, value: 2
-		}, {
-			name: "March"
-			, value: 3
-		}
-		, {
-			name: "April"
-			, value: 4
-		}, {
-			name: "May"
-			, value: 5
-		}, {
-			name: "June"
-			, value: 6
-		}, {
-			name: "July"
-			, value: 7
-		}
-		, {
-			name: "August"
-			, value: 8
-		}, {
-			name: "September"
-			, value: 9
-		}, {
-			name: "October"
-			, value: 10
-		}
-		, {
-			name: "November"
-			, value: 11
-		}, {
-			name: "December"
-			, value: 12
-		}
-	];
+		{name: "January", value: 1}, {name: "February", value: 2}, {name: "March", value: 3}, 
+		{name: "April", value: 4}, {name: "May", value: 5}, {name: "June", value: 6}, {name: "July", value: 7}, 
+		{name: "August", value: 8}, {name: "September", value: 9}, {name: "October", value: 10}, {name: "November", value: 11},
+		{name: "December", value: 12}];
 
-	$scope.years = ["This Year", "Last Year", "2Years Ago"];
+	$scope.years = ["2016", "2015", "2014"];
 
 	//Set the Month based on dropdown box
 	$scope.getMonth = function () {
@@ -400,9 +358,9 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		}
 		//Set the year based on dropdown box
 	$scope.getYear = function () {
-		if ($scope.selectedYear == "This Year")
+		if ($scope.selectedYear == "2016")
 			$scope.year = new Date().getFullYear();
-		else if ($scope.selectedYear == "Last Year")
+		else if ($scope.selectedYear == "2015")
 			$scope.year = new Date().getFullYear() - 1;
 		else
 			$scope.year = new Date().getFullYear() - 2;
@@ -456,50 +414,35 @@ app.controller('reportCtl', function ($scope, databaseData) {
  		getItem();
 		
 		$scope.sales2 = $scope.sales;
-		alert($scope.sales2.length);
 		
-		
- 		if ($scope.onOff == true)
-		{
 		var tempDate = new Date() 
- 		
  		var date = new Date($scope.year + "," + $scope.month);
  		var timeStamp ="";
  		var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
  		var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
  		for(var i = 0; i < $scope.sales2.length; i++) 
- 				{
- 					timeStamp = $scope.sales2[i].Date;
- 					tempDate = new Date(timeStamp * 1);
-					alert(tempDate);
- 					// if outside range
+ 			{
+ 				timeStamp = $scope.sales2[i].Date;
+ 				tempDate = new Date(timeStamp * 1);
+
+				if ($scope.onOff == true)
+				{
  					if(tempDate < firstDay || tempDate > lastDay) 
  					{
  						$scope.sales2.splice(i, 1);
  						i--;
  					}
- 				}
-		}
-		else if ($scope.onOff == false)
-		{
-			var tempWeek = new Date();
-			var timestampWeek = "";
-			var start = $scope.startWeek;
-			alert($scope.sales2.length);
-			for (var i = 0; i < $scope.sales2.length; i++)
+				}
+				else if ($scope.onOff == false)
 				{
-					timestampWeek = $scope.sale2[i].Date;
-					alert(timestampWeek);
-					
-					tempWeek = new Date(timestampWeek * 1);
-					
-					if (tempWeek < $scope.startWeek || tempWeek > $scope.startWeek.addDays(7))
+					if (tempDate < $scope.startWeek || tempDate > $scope.startWeek.addDays(7))
 					{
 						$scope.sales2.splice(i, 1);
 						i--;
 					}
 				}
-		}
+			}
+ 		}
 	}
-
-});
+	});
