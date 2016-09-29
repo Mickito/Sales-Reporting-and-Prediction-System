@@ -2,7 +2,7 @@ var app = angular.module('myApp', ['ngRoute', 'bootstrap-modal']);
 
 app.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
-		.when('/login', {
+		.when('/', {
 			templateUrl: "templates/Login.html"
 			, controller: "loginCtrl"
 		})
@@ -24,6 +24,11 @@ app.config(['$routeProvider', function ($routeProvider) {
 		});
 }]);
 
+app.run(function($rootScope) {
+    $rootScope.Nav = true;
+})
+
+	
 app.factory('databaseData', ['$http', function ($http) {
 	var databaseData = {};
 
@@ -376,7 +381,6 @@ app.controller('reportCtl', function ($scope, databaseData) {
 			})
 	}
 
-
 	function getItem() {
 		databaseData.getData("item")
 			.then(function (response) {
@@ -447,8 +451,8 @@ app.controller('reportCtl', function ($scope, databaseData) {
  		}
 	});
 
-app.controller('loginCtrl', function ($scope, databaseData) { 
-
+app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScope) { 
+	$rootScope.Nav = true;
 	$scope.Accounts = [];
 
 	function getAccounts() {
@@ -463,17 +467,15 @@ app.controller('loginCtrl', function ($scope, databaseData) {
 
 		for(var i = 0; i < $scope.Accounts.length; i++)
 		{
-			if ($scope.Accounts.Username == $scope.userName && $scope.Accounts.Password == $scope.userPass)
+			if ($scope.Accounts[i].Username === $scope.userName && $scope.Accounts[i].Password === $scope.userPass)
 			{
-				$location.path(Sales);
+				$rootScope.Nav = false;
+				$location.path('/Sales');
 			}
 		}
 	}
 });
 
 app.controller('indexCtrl', function ($scope) { 
-	
-	$scope.isActive = function(viewLocation) {
-		return viewLocation === $location.path();
-	};
+
 });
