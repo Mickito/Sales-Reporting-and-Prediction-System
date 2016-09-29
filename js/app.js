@@ -1,5 +1,6 @@
 var app = angular.module('myApp', ['ngRoute', 'bootstrap-modal']);
 
+// Webpage Routing
 app.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
 		.when('/', {
@@ -24,11 +25,12 @@ app.config(['$routeProvider', function ($routeProvider) {
 		});
 }]);
 
+//Global Variable that is initialized on start
 app.run(function($rootScope) {
-    $rootScope.Nav = true;
+	$rootScope.Nav = false;
 })
 
-	
+// Factory for pushing/pulling from database
 app.factory('databaseData', ['$http', function ($http) {
 	var databaseData = {};
 
@@ -117,6 +119,7 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 });
 
+// Bussiness Logic for Sales Page
 app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.sales = [];
 	$scope.editing = false;
@@ -234,6 +237,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	}
 });
 
+// Bussiness Logic for Analysis Page
 app.controller('analysisCtrl', function ($scope, databaseData) {
 	sales = [];
 	$scope.items = [];
@@ -309,6 +313,7 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 	}
 });
 
+// Bussiness Logic for Report Page
 app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.sales = [];
@@ -327,7 +332,7 @@ app.controller('reportCtl', function ($scope, databaseData) {
 
 	// jquery code for toggle switch and date picker
 	$("[name='pushtoggle']").bootstrapSwitch();
-
+	
 	$('.datepicker').datepicker();
 
 	 $('#apple').datepicker().on('changeDate', function(e){ 
@@ -362,7 +367,8 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.getMonth = function () {
 			$scope.month = $scope.selectedMonth.name;
 		}
-		//Set the year based on dropdown box
+
+	//Set the year based on dropdown box
 	$scope.getYear = function () {
 		if ($scope.selectedYear == "2016")
 			$scope.year = new Date().getFullYear();
@@ -451,6 +457,7 @@ app.controller('reportCtl', function ($scope, databaseData) {
  		}
 	});
 
+// Bussiness Logic for Login Page
 app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScope) { 
 	$rootScope.Nav = true;
 	$scope.GotAccounts = true;
@@ -477,8 +484,4 @@ app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScop
 			}
 		}
 	}
-});
-
-app.controller('indexCtrl', function ($scope) { 
-
 });
