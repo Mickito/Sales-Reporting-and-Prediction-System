@@ -114,7 +114,6 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 
 app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.sales = [];
-	$scope.items = [];
 	$scope.editing = false;
 	$scope.arrayIndex = -1;
 
@@ -146,16 +145,20 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		databaseData.getData("sales")
 			.then(function (response) {
 				$scope.sales = response.data;
-				updateNames();
-				updatePrices();
 			})
 	}
+
+	getSales();
+
+	// Get items so we can reference them
+	$scope.items = [];
 
 	function getItem() {
 		databaseData.getData("item")
 			.then(function (response) {
 				$scope.items = response.data;
-				getSales();
+				updateNames();
+				updatePrices();
 			})
 	}
 	getItem();
@@ -249,6 +252,7 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 	}
 
 	$scope.onSelectedItemChange = function () {
+		console.log($scope.selectedItemName);
 		for (var i = 0; i < $scope.items.length; i++) {
 			if ($scope.selectedItemName == $scope.items[i].Name) {
 				$scope.selectedItem = $scope.items[i];
@@ -264,8 +268,6 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 			var monthlySales = {};
 			var weeklySales = {};
 			var id = $scope.items[i].ItemID;
-			if (id != 4)
-				continue;
 
 			// Get each sale and separate into month/year
 			for (var j = 0; j < sales.length; j++) {
@@ -280,12 +282,14 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 					monthlySales[monthYear].push(sales[j].Quantity);
 					
 					// Get week
-					var startOfWeek = date;
+					var day = date.getDay();
+					var startOfWeek;
 					startOfWeek.setDate(date.getDate() - date.getDay());
 					var weekKey  = date.toISOString();
-					if (weeklySales[weekKey] == null) {
+					if (weeklySales[weekKey] == null {
 						weeklySales[weekKey] = [];
 					}
+					startOfWeek.setDate(date.getDate() - date.getDay();
 					weeklySales[weekKey].push(sales[j].Quantity);
 				}
 			}
@@ -293,41 +297,22 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 			// Total up the sales for each month
 			var totalQuantities = [];
 			for (key in monthlySales) {
-				console.log(key);
+				console.log("key: " + key);
 				var totalQuantity = 0;
 				for (var k = 0; k < monthlySales[key].length; k++) {
 					totalQuantity += parseInt(monthlySales[key][k]);
 				}
 				totalQuantities.push(totalQuantity);
 			}
-						
+
 			// Calculate the average from each total
 			var avg = 0;
 			for (var l = 0; l < totalQuantities.length; l++) {
 				avg += parseInt(totalQuantities[l]);
 			}
 			avg /= totalQuantities.length;
-			$scope.items[i].avgMonthlyQuantity = avg;
-			$scope.items[i].avgMonthlyRevenue = avg * $scope.items[i].Price;
-						
-			// Total up the sales for each week
-			var totalQuantities = [];
-			for (key in weeklySales) {
-				console.log("key: " + key);
-				var totalQuantity = 0;
-				for (var k = 0; k < weeklySales[key].length; k++) {
-					totalQuantity += parseInt(weeklySales[key][k]);
-				}
-				totalQuantities.push(totalQuantity);
-			}
-			
-			var avg = 0;
-			for (var l = 0; l < totalQuantities.length; l++) {
-				avg += parseInt(totalQuantities[l]);
-			}
-			avg /= totalQuantities.length;
-			$scope.items[i].avgWeeklyQuantity = avg;
-			$scope.items[i].avgWeeklyRevenue = avg * $scope.items[i].Price;
+			$scope.items[i].avgQuantity = avg;
+			$scope.items[i].avgRevenue = avg * $scope.items[i].Price;
 		}
 	}
 });
