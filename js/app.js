@@ -361,7 +361,7 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		{name: "August", value: 8}, {name: "September", value: 9}, {name: "October", value: 10}, {name: "November", value: 11},
 		{name: "December", value: 12}];
 
-	$scope.years = ["2016", "2015", "2014"];
+	$scope.years = ["2016", "2015", "2014","2013","2012","2011"];
 
 	//Set the Month based on dropdown box
 	$scope.getMonth = function () {
@@ -370,13 +370,14 @@ app.controller('reportCtl', function ($scope, databaseData) {
 
 	//Set the year based on dropdown box
 	$scope.getYear = function () {
-		if ($scope.selectedYear == "2016")
-			$scope.year = new Date().getFullYear();
-		else if ($scope.selectedYear == "2015")
-			$scope.year = new Date().getFullYear() - 1;
-		else
-			$scope.year = new Date().getFullYear() - 2;
-
+		for (var i = 0; i < $scope.years.length; i++)
+		{
+			if ($scope.selectedYear == $scope.years[i])
+			{
+				$scope.year = new Date().getFullYear() - i;
+			}
+		}
+		
 		$scope.year = $scope.year.toString();
 	}
 
