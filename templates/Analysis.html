@@ -1,7 +1,7 @@
 <div class="row">
 	<div class="col-xs-12">
 		<h1>Analysis Page Form</h1>
-		<p>Select an item to display its average sales per month</p>
+		<p>Select an item to display its average sales per month/week</p>
 	</div>
 </div>
 <div class="row">
@@ -15,8 +15,14 @@
 	</div>
 </div>
 <div class="row">
-	<div class="col-xs-12">
-		<p>Average quantity sold per month: <span>{{selectedItem.avgQuantity}}</span></p>
-		<p>Average revenue per month: <span>{{selectedItem.avgRevenue}}</span></p>
+	<div class="col-sm-4">
+		<h2>Average Monthly Sales</h2>
+		<p>Average quantity sold per month: <span>{{selectedItem.avgMonthlyQuantity}}</span></p>
+		<p>Average revenue per month: <span>{{selectedItem.avgMonthlyRevenue | currency}}</span></p>
+	</div>
+	<div class="col-sm-4">
+		<h2>Average Weekly Sales</h2>
+		<p>Average quantity sold per week: <span>{{selectedItem.avgWeeklyQuantity}}</span></p>
+		<p>Average revenue per week: <span>{{selectedItem.avgWeeklyRevenue | currency}}</span></p>
 	</div>
 </div>
