@@ -453,17 +453,20 @@ app.controller('reportCtl', function ($scope, databaseData) {
 
 app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScope) { 
 	$rootScope.Nav = true;
+	$scope.GotAccounts = true;
 	$scope.Accounts = [];
 
 	function getAccounts() {
 		databaseData.getData("Login")
 			.then(function (response) {
 				$scope.Accounts = response.data;
+				$scope.GotAccounts = false;
 			})
 		}
 	
+	getAccounts();
+	
 	$scope.check = function () {
-		getAccounts();
 
 		for(var i = 0; i < $scope.Accounts.length; i++)
 		{
