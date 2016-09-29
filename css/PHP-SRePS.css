@@ -7,6 +7,18 @@ body {
 	background-color:whitesmoke;
 }
 
+.bckg {
+	background-image: url("../image/MG_0135.jpg");
+}
+
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+
 .navbar-default {
   background-color: #2e8dcc;
   border-color: #2784ae;
