@@ -2,9 +2,9 @@ var app = angular.module('myApp', ['ngRoute', 'bootstrap-modal']);
 
 app.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
-		.when('/', {
-			templateUrl: "templates/Sales.html"
-			, controller: "saleCtrl"
+		.when('/login', {
+			templateUrl: "templates/Login.html"
+			, controller: "loginCtrl"
 		})
 		.when('/Sales', {
 			templateUrl: "templates/Sales.html"
@@ -343,6 +343,7 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.getWeek = function () {
 		$scope.startWeek = $scope.selectedWeek.days;
 		$scope.endWeek = $scope.startWeek + 7;
+	}
 
 	$scope.months = [
 		{name: "January", value: 1}, {name: "February", value: 2}, {name: "March", value: 3}, 
@@ -444,5 +445,35 @@ app.controller('reportCtl', function ($scope, databaseData) {
 				}
 			}
  		}
-	}
 	});
+
+app.controller('loginCtrl', function ($scope, databaseData) { 
+
+	$scope.Accounts = [];
+
+	function getAccounts() {
+		databaseData.getData("Login")
+			.then(function (response) {
+				$scope.Accounts = response.data;
+			})
+		}
+	
+	$scope.check = function () {
+		getAccounts();
+
+		for(var i = 0; i < $scope.Accounts.length; i++)
+		{
+			if ($scope.Accounts.Username == $scope.userName && $scope.Accounts.Password == $scope.userPass)
+			{
+				$location.path(Sales);
+			}
+		}
+	}
+});
+
+app.controller('indexCtrl', function ($scope) { 
+	
+	$scope.isActive = function(viewLocation) {
+		return viewLocation === $location.path();
+	};
+});
