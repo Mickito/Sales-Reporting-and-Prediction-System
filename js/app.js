@@ -276,8 +276,6 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 			var monthlySales = {};
 			var weeklySales = {};
 			var id = $scope.items[i].ItemID;
-			if (id != 4)
-				continue;
 
 			// Get each sale and separate into month/year
 			for (var j = 0; j < sales.length; j++) {
