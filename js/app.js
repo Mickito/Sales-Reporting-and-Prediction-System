@@ -459,13 +459,13 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	});
 
 // Bussiness Logic for Login Page
-app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScope) { 
+app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScope) {
 	$rootScope.Nav = true;
 	$scope.GotAccounts = true;
 	$scope.Accounts = [];
 
 	function getAccounts() {
-		databaseData.getData("Login")
+		databaseData.getData("login")
 			.then(function (response) {
 				$scope.Accounts = response.data;
 				$scope.GotAccounts = false;
