@@ -237,7 +237,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	}
 });
 
-// Bussiness Logic for Analysis Page
+// Analysis Page
 app.controller('analysisCtrl', function ($scope, databaseData) {
 	sales = [];
 	$scope.items = [];
@@ -261,7 +261,6 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 	}
 
 	$scope.onSelectedItemChange = function () {
-		console.log($scope.selectedItemName);
 		for (var i = 0; i < $scope.items.length; i++) {
 			if ($scope.selectedItemName == $scope.items[i].Name) {
 				$scope.selectedItem = $scope.items[i];
@@ -275,45 +274,75 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 	function calculateAverageSales() {
 		for (var i = 0; i < $scope.items.length; i++) {
 			var monthlySales = {};
+			var weeklySales = {};
 			var id = $scope.items[i].ItemID;
+			if (id != 4)
+				continue;
 
 			// Get each sale and separate into month/year
 			for (var j = 0; j < sales.length; j++) {
 				if (id == sales[j].ItemID) {
-					// Get key
+					// Get date
 					var date = new Date(parseInt(sales[j].Date));
+					// Get month
 					var monthYear = date.getMonth() + "" + date.getFullYear();
 					if (monthlySales[monthYear] == null) {
 						monthlySales[monthYear] = [];
 					}
 					monthlySales[monthYear].push(sales[j].Quantity);
+					
+					// Get week
+					var startOfWeek = date;
+					startOfWeek.setDate(date.getDate() - date.getDay());
+					var weekKey  = date.toISOString();
+					if (weeklySales[weekKey] == null) {
+						weeklySales[weekKey] = [];
+					}
+					weeklySales[weekKey].push(sales[j].Quantity);
 				}
 			}
 
 			// Total up the sales for each month
 			var totalQuantities = [];
 			for (key in monthlySales) {
-				console.log("key: " + key);
 				var totalQuantity = 0;
 				for (var k = 0; k < monthlySales[key].length; k++) {
 					totalQuantity += parseInt(monthlySales[key][k]);
 				}
 				totalQuantities.push(totalQuantity);
 			}
-
+						
 			// Calculate the average from each total
 			var avg = 0;
 			for (var l = 0; l < totalQuantities.length; l++) {
 				avg += parseInt(totalQuantities[l]);
 			}
 			avg /= totalQuantities.length;
-			$scope.items[i].avgQuantity = avg;
-			$scope.items[i].avgRevenue = avg * $scope.items[i].Price;
+			$scope.items[i].avgMonthlyQuantity = avg;
+			$scope.items[i].avgMonthlyRevenue = avg * $scope.items[i].Price;
+						
+			// Total up the sales for each week
+			var totalQuantities = [];
+			for (key in weeklySales) {
+				var totalQuantity = 0;
+				for (var k = 0; k < weeklySales[key].length; k++) {
+					totalQuantity += parseInt(weeklySales[key][k]);
+				}
+				totalQuantities.push(totalQuantity);
+			}
+			
+			var avg = 0;
+			for (var l = 0; l < totalQuantities.length; l++) {
+				avg += parseInt(totalQuantities[l]);
+			}
+			avg /= totalQuantities.length;
+			$scope.items[i].avgWeeklyQuantity = avg;
+			$scope.items[i].avgWeeklyRevenue = avg * $scope.items[i].Price;
 		}
 	}
 });
 
-// Bussiness Logic for Report Page
+// Business Logic for Report Page
 app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.sales = [];
