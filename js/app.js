@@ -148,6 +148,15 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 			}
 		}
 	}
+	
+	function idFromName(itemName)
+	{
+		for (var i = 0; i < $scope.items.length; i++)
+			if ($scope.items[i].Name == itemName)
+				return $scope.items[i].ItemID;
+		
+		return -1;
+	}
 
 	function getSales() {
 		databaseData.getData("sales")
@@ -173,7 +182,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	$scope.onSubmit = function () {
 		sale = {};
-		sale.ItemID = $scope.productID;
+		sale.ItemID = idFromName($scope.productName);
 		sale.Date = $scope.productDate.getTime();
 		sale.Quantity = $scope.productSold;
 		$scope.sales.push(sale);
@@ -199,7 +208,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.editSale = function (index) {
 		$scope.editing = true;
 		$scope.arrayIndex = index;
-		$scope.productID = parseInt($scope.sales[index].ItemID);
+		$scope.productName = $scope.sales[index].ItemName;
 		$scope.productSold = parseInt($scope.sales[index].Quantity);
 		var convertToDate = new Date(parseInt($scope.sales[index].Date));
 		$scope.productDate = convertToDate;
@@ -208,7 +217,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.onUpdate = function () {
 		if ($scope.editing) {
 			var data = JSON.stringify({
-				ItemID: $scope.productID
+				ItemID: idFromName($scope.productName)
 				, Date: $scope.productDate.getTime()
 				, Quantity: $scope.productSold
 			});
@@ -221,7 +230,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 					});
 
-			$scope.sales[$scope.arrayIndex].ItemID = $scope.productID;
+			$scope.sales[$scope.arrayIndex].ItemID = idFromName($scope.productName);
 			$scope.sales[$scope.arrayIndex].Date = $scope.productDate.getTime();
 			$scope.sales[$scope.arrayIndex].Quantity = $scope.productSold;
 			updatePrices();
@@ -231,7 +240,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	$scope.onReset = function () {
 		$scope.editing = false;
-		$scope.productID = "";
+		$scope.productName = "";
 		$scope.productDate = "";
 		$scope.productSold = "";
 	}
