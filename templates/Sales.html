@@ -4,8 +4,10 @@
 			<h1>Sales Page Form</h1>
 			<form name="salesForm">
 				<p>
-					<label for="productID">Product ID:</label>
-					<input type="number" id="productID" data-ng-model="productID" placeholder="ID of item" required="true" />
+					<label for="productName">Product ID:</label>
+					<select id="productName" data-ng-model="productName">
+						<option data-ng-repeat="item in items">{{item.Name}}</option>
+					</select>
 					<label for="productDate">Purchased Date: </label>
 					<input type="date" id="productDate" data-ng-model="productDate" required="true" />
 					<label for="productSold">Quantity Sold:</label>
@@ -35,7 +37,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr data-ng-repeat="sale in sales | OrderBy:'ItemID':true">
+						<tr data-ng-repeat="sale in sales | orderBy:sortField:sortReverse">
 							<td headers="pdtName">{{sale.ItemName}}</td>
 							<td headers="pchdDate">{{sale.Date | date : format : mediumDate}}</td>
 							<td headers="qnttySold">{{sale.Quantity}}</td>

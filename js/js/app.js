@@ -1,11 +1,10 @@
 var app = angular.module('myApp', ['ngRoute', 'bootstrap-modal']);
 
-// Webpage Routing
 app.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider
 		.when('/', {
-			templateUrl: "templates/Login.html"
-			, controller: "loginCtrl"
+			templateUrl: "templates/Sales.html"
+			, controller: "saleCtrl"
 		})
 		.when('/Sales', {
 			templateUrl: "templates/Sales.html"
@@ -25,12 +24,6 @@ app.config(['$routeProvider', function ($routeProvider) {
 		});
 }]);
 
-//Global Variable that is initialized on start
-app.run(function($rootScope) {
-	$rootScope.Nav = false;
-})
-
-// Factory for pushing/pulling from database
 app.factory('databaseData', ['$http', function ($http) {
 	var databaseData = {};
 
@@ -119,7 +112,6 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	}
 });
 
-// Bussiness Logic for Sales Page
 app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.sales = [];
 	$scope.editing = false;
@@ -148,15 +140,6 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 			}
 		}
 	}
-	
-	function idFromName(itemName)
-	{
-		for (var i = 0; i < $scope.items.length; i++)
-			if ($scope.items[i].Name == itemName)
-				return $scope.items[i].ItemID;
-		
-		return -1;
-	}
 
 	function getSales() {
 		databaseData.getData("sales")
@@ -182,7 +165,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	$scope.onSubmit = function () {
 		sale = {};
-		sale.ItemID = idFromName($scope.productName);
+		sale.ItemID = $scope.productID;
 		sale.Date = $scope.productDate.getTime();
 		sale.Quantity = $scope.productSold;
 		$scope.sales.push(sale);
@@ -208,7 +191,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.editSale = function (index) {
 		$scope.editing = true;
 		$scope.arrayIndex = index;
-		$scope.productName = $scope.sales[index].ItemName;
+		$scope.productID = parseInt($scope.sales[index].ItemID);
 		$scope.productSold = parseInt($scope.sales[index].Quantity);
 		var convertToDate = new Date(parseInt($scope.sales[index].Date));
 		$scope.productDate = convertToDate;
@@ -217,7 +200,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.onUpdate = function () {
 		if ($scope.editing) {
 			var data = JSON.stringify({
-				ItemID: idFromName($scope.productName)
+				ItemID: $scope.productID
 				, Date: $scope.productDate.getTime()
 				, Quantity: $scope.productSold
 			});
@@ -230,7 +213,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 					});
 
-			$scope.sales[$scope.arrayIndex].ItemID = idFromName($scope.productName);
+			$scope.sales[$scope.arrayIndex].ItemID = $scope.productID;
 			$scope.sales[$scope.arrayIndex].Date = $scope.productDate.getTime();
 			$scope.sales[$scope.arrayIndex].Quantity = $scope.productSold;
 			updatePrices();
@@ -240,13 +223,12 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	$scope.onReset = function () {
 		$scope.editing = false;
-		$scope.productName = "";
+		$scope.productID = "";
 		$scope.productDate = "";
 		$scope.productSold = "";
 	}
 });
 
-// Analysis Page
 app.controller('analysisCtrl', function ($scope, databaseData) {
 	sales = [];
 	$scope.items = [];
@@ -270,6 +252,7 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 	}
 
 	$scope.onSelectedItemChange = function () {
+		console.log($scope.selectedItemName);
 		for (var i = 0; i < $scope.items.length; i++) {
 			if ($scope.selectedItemName == $scope.items[i].Name) {
 				$scope.selectedItem = $scope.items[i];
@@ -299,12 +282,14 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 					monthlySales[monthYear].push(sales[j].Quantity);
 					
 					// Get week
-					var startOfWeek = date;
+					var day = date.getDay();
+					var startOfWeek;
 					startOfWeek.setDate(date.getDate() - date.getDay());
 					var weekKey  = date.toISOString();
-					if (weeklySales[weekKey] == null) {
+					if (weeklySales[weekKey] == null {
 						weeklySales[weekKey] = [];
 					}
+					startOfWeek.setDate(date.getDate() - date.getDay();
 					weeklySales[weekKey].push(sales[j].Quantity);
 				}
 			}
@@ -312,44 +297,26 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 			// Total up the sales for each month
 			var totalQuantities = [];
 			for (key in monthlySales) {
+				console.log("key: " + key);
 				var totalQuantity = 0;
 				for (var k = 0; k < monthlySales[key].length; k++) {
 					totalQuantity += parseInt(monthlySales[key][k]);
 				}
 				totalQuantities.push(totalQuantity);
 			}
-						
+
 			// Calculate the average from each total
 			var avg = 0;
 			for (var l = 0; l < totalQuantities.length; l++) {
 				avg += parseInt(totalQuantities[l]);
 			}
 			avg /= totalQuantities.length;
-			$scope.items[i].avgMonthlyQuantity = avg;
-			$scope.items[i].avgMonthlyRevenue = avg * $scope.items[i].Price;
-						
-			// Total up the sales for each week
-			var totalQuantities = [];
-			for (key in weeklySales) {
-				var totalQuantity = 0;
-				for (var k = 0; k < weeklySales[key].length; k++) {
-					totalQuantity += parseInt(weeklySales[key][k]);
-				}
-				totalQuantities.push(totalQuantity);
-			}
-			
-			var avg = 0;
-			for (var l = 0; l < totalQuantities.length; l++) {
-				avg += parseInt(totalQuantities[l]);
-			}
-			avg /= totalQuantities.length;
-			$scope.items[i].avgWeeklyQuantity = avg;
-			$scope.items[i].avgWeeklyRevenue = avg * $scope.items[i].Price;
+			$scope.items[i].avgQuantity = avg;
+			$scope.items[i].avgRevenue = avg * $scope.items[i].Price;
 		}
 	}
 });
 
-// Business Logic for Report Page
 app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.sales = [];
@@ -368,10 +335,10 @@ app.controller('reportCtl', function ($scope, databaseData) {
 
 	// jquery code for toggle switch and date picker
 	$("[name='pushtoggle']").bootstrapSwitch();
-	
+
 	$('.datepicker').datepicker();
 
-	 $('#apple').datepicker().on('changeDate', function(e){ 
+	 $('#apple').datepicker().on('changeDate', function(e){
 		$scope.$apply(function(){
 			$scope.startWeek = new Date(e.date);
 			var temp = new Date(e.date).addDays(7);
@@ -389,7 +356,6 @@ app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.getWeek = function () {
 		$scope.startWeek = $scope.selectedWeek.days;
 		$scope.endWeek = $scope.startWeek + 7;
-	}
 
 	$scope.months = [
 		{name: "January", value: 1}, {name: "February", value: 2}, {name: "March", value: 3}, 
@@ -397,23 +363,21 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		{name: "August", value: 8}, {name: "September", value: 9}, {name: "October", value: 10}, {name: "November", value: 11},
 		{name: "December", value: 12}];
 
-	$scope.years = ["2016", "2015", "2014","2013","2012","2011"];
+	$scope.years = ["2016", "2015", "2014"];
 
 	//Set the Month based on dropdown box
 	$scope.getMonth = function () {
-			$scope.month = $scope.selectedMonth.name;
-		}
-
+		$scope.month = $scope.selectedMonth.name;
+	}
 	//Set the year based on dropdown box
 	$scope.getYear = function () {
-		for (var i = 0; i < $scope.years.length; i++)
-		{
-			if ($scope.selectedYear == $scope.years[i])
-			{
-				$scope.year = new Date().getFullYear() - i;
-			}
-		}
-		
+		if ($scope.selectedYear == "2016")
+			$scope.year = new Date().getFullYear();
+		else if ($scope.selectedYear == "2015")
+			$scope.year = new Date().getFullYear() - 1;
+		else
+			$scope.year = new Date().getFullYear() - 2;
+
 		$scope.year = $scope.year.toString();
 	}
 
@@ -423,6 +387,7 @@ app.controller('reportCtl', function ($scope, databaseData) {
 				$scope.sales = response.data;
 			})
 	}
+
 
 	function getItem() {
 		databaseData.getData("item")
@@ -491,34 +456,6 @@ app.controller('reportCtl', function ($scope, databaseData) {
 					}
 				}
 			}
- 		}
-	});
-
-// Bussiness Logic for Login Page
-app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScope) {
-	$rootScope.Nav = true;
-	$scope.GotAccounts = true;
-	$scope.Accounts = [];
-
-	function getAccounts() {
-		databaseData.getData("login")
-			.then(function (response) {
-				$scope.Accounts = response.data;
-				$scope.GotAccounts = false;
-			})
-		}
-	
-	getAccounts();
-	
-	$scope.check = function () {
-
-		for(var i = 0; i < $scope.Accounts.length; i++)
-		{
-			if ($scope.Accounts[i].Username === $scope.userName && $scope.Accounts[i].Password === $scope.userPass)
-			{
-				$rootScope.Nav = false;
-				$location.path('/Sales');
-			}
-		}
+	}
 	}
 });
