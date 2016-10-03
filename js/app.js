@@ -353,10 +353,11 @@ app.controller('analysisCtrl', function ($scope, databaseData) {
 app.controller('reportCtl', function ($scope, databaseData) {
 	$scope.items = [];
 	$scope.sales = [];
-	$scope.sales2 = [];
 	$scope.startWeek = 0;
 	$scope.endWeek = 0;
 	$scope.onOff = true;
+	$scope.monthlySales = [];
+	$scope.noData = true;
 	
 	// prototype allows you to .addDays to date
 	Date.prototype.addDays = function(days)
@@ -421,6 +422,8 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		databaseData.getData("sales")
 			.then(function (response) {
 				$scope.sales = response.data;
+				updateNames();
+				updatePrices();
 			})
 	}
 
@@ -428,8 +431,8 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		databaseData.getData("item")
 			.then(function (response) {
 				$scope.items = response.data;
-				updateNames();
-				updatePrices();
+				getSales();
+
 			})
 	}
 
@@ -456,50 +459,76 @@ app.controller('reportCtl', function ($scope, databaseData) {
 			}
 		}
 	}
+	
+	getItem();
 
-	$scope.generateTable = function () {
-		getSales();
- 		getItem();
-		
-		$scope.sales2 = $scope.sales;
+	$scope.generateTable = function () 
+	{
 		
 		var tempDate = new Date() 
  		var date = new Date($scope.year + "," + $scope.month);
  		var timeStamp ="";
  		var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
  		var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+		$scope.monthlySales = JSON.parse(JSON.stringify($scope.sales));
 
- 		for(var i = 0; i < $scope.sales2.length; i++) 
- 			{
- 				timeStamp = $scope.sales2[i].Date;
- 				tempDate = new Date(timeStamp * 1);
+ 		for(var i = 0; i < $scope.sales.length; i++) 
+ 		{
+			//if Monthly sales is not empty 
+			if ($scope.monthlySales.length > 0)
+				{
+					$scope.noData = false;
+					timeStamp = $scope.monthlySales[i].Date;
+					tempDate = new Date(timeStamp * 1);
 
-				if ($scope.onOff == true)
-				{
- 					if(tempDate < firstDay || tempDate > lastDay) 
- 					{
- 						$scope.sales2.splice(i, 1);
- 						i--;
- 					}
-				}
-				else if ($scope.onOff == false)
-				{
-					if (tempDate < $scope.startWeek || tempDate > $scope.startWeek.addDays(7))
+					if ($scope.onOff == true)
 					{
-						$scope.sales2.splice(i, 1);
-						i--;
+						if(tempDate < firstDay || tempDate > lastDay) 
+						{
+							$scope.monthlySales.splice(i, 1);
+							i--;
+						}
+					}
+					else if ($scope.onOff == false)
+					{
+						if (tempDate < $scope.startWeek || tempDate > $scope.startWeek.addDays(7))
+						{
+							$scope.monthlySales.splice(i, 1);
+							i--;
+						}
 					}
 				}
+			else
+				$scope.noData = true;
+		}
+ 	}
+	$scope.combineData = function()
+	{
+		for (var i = 0; i < $scope.monthlySales.length; i++)
+		{
+			for (var j = 0; j < $scope.monthlySales.length; j++)
+			{
+				if ($scope.monthlySales[i].ItemID == $scope.monthlySales[j].ItemID && $scope.monthlySales[i].TransactionID != $scope.monthlySales[j].TransactionID)
+				{
+					$scope.monthlySales[i].Price += $scope.monthlySales[j].Price;
+					$scope.monthlySales[i].Quantity = parseInt($scope.monthlySales[i].Quantity) + parseInt($scope.monthlySales[j].Quantity);
+					$scope.monthlySales.splice(j,1);
+					j--
+						
+				}
+
 			}
- 		}
-	});
+		}
+	}
+	
+
+});
 
 // Bussiness Logic for Login Page
 app.controller('loginCtrl', function ($scope, databaseData, $location, $rootScope) {
 	$rootScope.Nav = true;
 	$scope.GotAccounts = true;
 	$scope.Accounts = [];
-
 	function getAccounts() {
 		databaseData.getData("login")
 			.then(function (response) {

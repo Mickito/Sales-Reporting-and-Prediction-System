@@ -20,6 +20,9 @@
 				<p>
 					<input type="button" class="btn btn-primary" value="Generate Table" data-ng-click="generateTable()">
 					<input type="checkbox" name="pushtoggle" checked>
+				</p>				
+				<p>
+					<input type="button" class="btn btn-primary" value="Combine Data" data-ng-click="combineData()">
 				</p>
 			</form>
 		</fieldset>
@@ -27,7 +30,7 @@
 	<!--Generate Table -->
 	<div class="row">
 		<div class="col-md-12">
-			<div class="table-responsive">
+			<div class="table-responsive" ng-show="noData == false">
 				<table class="table table-striped tabel-hover">
 					<thead>
 						<tr>
@@ -38,7 +41,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr data-ng-repeat="sale in sales2">
+						<tr data-ng-repeat="sale in monthlySales">
 							<td headers="pdtName">{{sale.ItemName}}</td>
 							<td headers="pchdDate">{{sale.Date | date : format : mediumDate}}</td>
 							<td headers="qnttySold">{{sale.Quantity}}</td>
@@ -46,6 +49,9 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			<div>
+				<p ng-show="noData == true">There's no data to Display</p>
 			</div>
 		</div>
 	</div>
