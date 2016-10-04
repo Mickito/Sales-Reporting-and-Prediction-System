@@ -472,7 +472,7 @@ app.controller('reportCtl', function ($scope, databaseData) {
  		var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 		$scope.monthlySales = JSON.parse(JSON.stringify($scope.sales));
 
- 		for(var i = 0; i < $scope.sales.length; i++) 
+ 		for(var i = 0; i < $scope.monthlySales.length; i++) 
  		{
 			//if Monthly sales is not empty 
 			if ($scope.monthlySales.length > 0)
@@ -500,10 +500,9 @@ app.controller('reportCtl', function ($scope, databaseData) {
 				}
 			else
 				$scope.noData = true;
-			
-			$scope.combineData();
 		}
 		
+		$scope.combineData();
 		
 		
 		//TestCases
