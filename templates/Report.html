@@ -20,9 +20,9 @@
 				<p>
 					<input type="button" class="btn btn-primary" value="Generate Table" data-ng-click="generateTable()">
 					<input type="checkbox" name="pushtoggle" checked>
-				</p>				
+				</p>
 				<p>
-					<input type="button" class="btn btn-primary" value="Combine Data" data-ng-click="combineData()">
+					<input type="button" class="btn btn-primary" value="Generate CSV" ng-csv="monthlySales" csv-header="getHeader()" filename="test.csv">
 				</p>
 			</form>
 		</fieldset>

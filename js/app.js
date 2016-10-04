@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ngRoute', 'bootstrap-modal']);
+var app = angular.module('myApp', ['ngRoute', 'bootstrap-modal', 'ngSanitize', 'ngCsv']);
 
 // Webpage Routing
 app.config(['$routeProvider', function ($routeProvider) {
@@ -500,8 +500,23 @@ app.controller('reportCtl', function ($scope, databaseData) {
 				}
 			else
 				$scope.noData = true;
+			
+			$scope.combineData();
 		}
+		
+		
+		
+		//TestCases
+		if ($scope.noData)
+			alert("TESTCASE - TABLE IS EMPTY");
  	}
+	
+	$scope.getHeader = function()
+	{
+		return ["Transaction ID", "Item ID","Date (TimeStamp)", "Quantity", "Discount Number","Discount Type","Item Name", "Total Price"];
+	}
+	
+	
 	$scope.combineData = function()
 	{
 		for (var i = 0; i < $scope.monthlySales.length; i++)
