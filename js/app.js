@@ -54,6 +54,9 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
 
+	$scope.sortField = 'Name';
+	$scope.sortReverse = false;
+
 	function getItem() {
 		databaseData.getData("item")
 			.then(function (response) {
@@ -116,6 +119,9 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 		$scope.itemName = "";
 		$scope.itemPrice = "";
 		$scope.itemQuantity = "";
+
+		$scope.sortField = 'Name';
+		$scope.sortReverse = false;
 	}
 });
 
@@ -124,6 +130,10 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.sales = [];
 	$scope.editing = false;
 	$scope.arrayIndex = -1;
+	$scope.salesData = [];
+
+	$scope.sortField = 'ItemName';
+	$scope.sortReverse = false;
 
 	function updatePrices() {
 		for (var i = 0; i < $scope.sales.length; i++) {
@@ -167,6 +177,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 				$scope.items = response.data;
 				updateNames();
 				updatePrices();
+				$scope.salesData = $scope.sales;
 			})
 	}
 	getItem();
@@ -194,6 +205,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 		updatePrices();
 		updateNames();
+		$scope.salesData = $scope.sales;
 	}
 
 	$scope.editSale = function (index) {
@@ -226,6 +238,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 			$scope.sales[$scope.arrayIndex].Quantity = $scope.productSold;
 			updatePrices();
 			updateNames();
+			$scope.salesData = $scope.sales;
 		}
 	}
 
@@ -234,6 +247,9 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 		$scope.productID = "";
 		$scope.productDate = "";
 		$scope.productSold = "";
+
+		$scope.sortField = 'ItemName';
+		$scope.sortReverse = false;
 	}
 });
 
@@ -374,11 +390,12 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		{
 			if ($scope.selectedYear == $scope.years[i])
 			{
-				$scope.year = new Date().getFullYear() - i;
+				$scope.year = new Date().getFullYear();
 			}
 		}
 		
 		$scope.year = $scope.year.toString();
+		alert($scope.year);
 	}
 
 	function getSales() {
