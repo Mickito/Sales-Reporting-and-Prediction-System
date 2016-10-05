@@ -427,12 +427,11 @@ app.controller('reportCtl', function ($scope, databaseData) {
 		{
 			if ($scope.selectedYear == $scope.years[i])
 			{
-				$scope.year = new Date().getFullYear();
+				$scope.year = new Date().getFullYear() - i ;
 			}
 		}
 		
 		$scope.year = $scope.year.toString();
-		alert($scope.year);
 	}
 
 	function getSales() {
