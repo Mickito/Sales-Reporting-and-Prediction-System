@@ -23,8 +23,6 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<p>sortField: {{sortField}}</p>
-			<p>sortReverse: {{sortReverse}}</p>
 			<div class="table-responsive">
 				<table class="table table-striped tabel-hover">
 					<thead>
@@ -37,7 +35,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr data-ng-repeat="sale in sales | orderBy:sortField:sortReverse">
+						<tr data-ng-repeat="sale in salesData | orderBy:sortField:sortReverse">
 							<td headers="pdtName">{{sale.ItemName}}</td>
 							<td headers="pchdDate">{{sale.Date | date : format : mediumDate}}</td>
 							<td headers="qnttySold">{{sale.Quantity}}</td>
