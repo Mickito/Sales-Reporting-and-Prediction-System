@@ -50,6 +50,7 @@ app.factory('databaseData', ['$http', function ($http) {
 }]);
 
 app.controller('itemsCtrl', function ($scope, databaseData) {
+	$scope.rawData = [];
 	$scope.items = [];
 	$scope.isEdit = false;
 	$scope.arrayIndex = -1;
@@ -60,8 +61,14 @@ app.controller('itemsCtrl', function ($scope, databaseData) {
 	function getItem() {
 		databaseData.getData("item")
 			.then(function (response) {
-				$scope.items = response.data;
-			})
+				$scope.rawData = response.data;
+				for (var i = 0; i < $scope.rawData.length; i++)
+				{
+					$scope.rawData[i].Price = parseInt($scope.rawData[i].Price, 10);
+					$scope.rawData[i].StockQty = parseInt($scope.rawData[i].StockQty, 10);
+				}
+				$scope.items = $scope.rawData;
+			});		
 	}
 
 	getItem();
@@ -132,6 +139,9 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 	$scope.arrayIndex = -1;
 	$scope.salesData = [];
 
+	// Get items so we can reference them
+	$scope.items = [];
+
 	$scope.sortField = 'ItemName';
 	$scope.sortReverse = false;
 
@@ -177,18 +187,32 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 	getSales();
 
-	// Get items so we can reference them
-	$scope.items = [];
-
 	function getItem() {
 		databaseData.getData("item")
 			.then(function (response) {
 				$scope.items = response.data;
 				updateNames();
 				updatePrices();
+				for (var i = 0; i < $scope.sales.length; i++)
+				{
+					$scope.sales[i].Price = parseInt($scope.sales[i].Price, 10);
+					$scope.sales[i].Quantity = parseInt($scope.sales[i].Quantity, 10);
+				}
 				$scope.salesData = $scope.sales;
 			})
 	}
+
+	function refreshItem() {
+		updateNames();
+		updatePrices();
+		for (var i = 0; i < $scope.sales.length; i++)
+		{
+			$scope.sales[i].Price = parseInt($scope.sales[i].Price, 10);
+			$scope.sales[i].Quantity = parseInt($scope.sales[i].Quantity, 10);
+		}
+		$scope.salesData = $scope.sales;
+	}
+
 	getItem();
 
 	$scope.onSubmit = function () {
@@ -212,9 +236,7 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 
 				});
 
-		updatePrices();
-		updateNames();
-		$scope.salesData = $scope.sales;
+		refreshItem();
 	}
 
 	$scope.editSale = function (index) {
@@ -245,9 +267,8 @@ app.controller('saleCtrl', function ($scope, databaseData) {
 			$scope.sales[$scope.arrayIndex].ItemID = idFromName($scope.productName);
 			$scope.sales[$scope.arrayIndex].Date = $scope.productDate.getTime();
 			$scope.sales[$scope.arrayIndex].Quantity = $scope.productSold;
-			updatePrices();
-			updateNames();
-			$scope.salesData = $scope.sales;
+			
+			refreshItem();
 		}
 	}
 
